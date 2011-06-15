@@ -78,7 +78,7 @@ public class IRCTime implements IRCHandler
 		{
 			ChatPanel tab = new ChatPanel();
 			tab.setName(name);
-			tab.setTopic(name);
+//			tab.setTopic(name);
 			tabPanel.addTab(name, tab);
 			return tab;
 		}
@@ -177,6 +177,12 @@ public class IRCTime implements IRCHandler
 			String text = String.format("join %s", nick);
 			appendLine(chan, text);
 		}
+		else if (command.equals("332"))
+		{
+			String chan = message.getParam(1);
+			String text = message.getTrailing();
+			setTopic(chan, text);
+		}
 		else if (command.equals("PING"))
 		{
 			// ping
@@ -213,6 +219,12 @@ public class IRCTime implements IRCHandler
 		ChatPanel tab = getTab(name);
 		if (tab == null) throw new RuntimeException("É^ÉuÇ™å©Ç¬Ç©ÇËÇ‹ÇπÇÒÅB");
 		tab.setNames(names);
+	}
+
+	void setTopic(String name, String text)
+	{
+		ChatPanel tab = getTab(name);
+		tab.setTopic(text);
 	}
 }
 

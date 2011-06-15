@@ -39,7 +39,7 @@ public class ChatPanel extends JPanel
 
 	private JList nameList = new JList(nameModel);
 
-	private JLabel topicLabel = new JLabel(" ");
+	private JLabel topicLabel = new JLabel();
 
 	public ChatPanel()
 	{
