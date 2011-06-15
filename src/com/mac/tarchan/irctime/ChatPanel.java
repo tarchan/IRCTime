@@ -9,6 +9,7 @@ import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,6 +39,8 @@ public class ChatPanel extends JPanel
 
 	private JList nameList = new JList(nameModel);
 
+	private JLabel topicLabel = new JLabel(" ");
+
 	public ChatPanel()
 	{
 		createMain(this);
@@ -64,9 +67,10 @@ public class ChatPanel extends JPanel
 		inputBox.add(sendButton);
 
 		main.setLayout(new BorderLayout());
-		main.add(infoPane, BorderLayout.EAST);
+		main.add(topicLabel, BorderLayout.NORTH);
 		main.add(contentPane, BorderLayout.CENTER);
 		main.add(inputBox, BorderLayout.SOUTH);
+		main.add(infoPane, BorderLayout.EAST);
 		return main;
 	}
 
@@ -94,5 +98,19 @@ public class ChatPanel extends JPanel
 	public void appendLine(String text)
 	{
 		mainText.setText(String.format("%s%s%n", mainText.getText(), text));
+	}
+
+	public void setNames(String[] names)
+	{
+		nameModel.clear();
+		for (String name : names)
+		{
+			nameModel.addElement(name);
+		}
+	}
+
+	public void setTopic(String text)
+	{
+		topicLabel.setText(text);
 	}
 }
