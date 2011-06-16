@@ -3,24 +3,15 @@
  */
 package com.mac.tarchan.irctime;
 
-import java.awt.Window;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.mac.tarchan.desktop.DesktopSupport;
-import com.mac.tarchan.desktop.OptionBox;
 import com.mac.tarchan.desktop.SexyControl;
 import com.mac.tarchan.irc.IRCClient;
 import com.mac.tarchan.irc.IRCEvent;
@@ -35,9 +26,7 @@ public class IRCTime implements IRCHandler
 {
 	private static final Log log = LogFactory.getLog(IRCTime.class);
 
-	private JTabbedPane tabPanel = new JTabbedPane();
-
-	private OptionBox option;
+	private ChatWindow window;
 
 	/**
 	 * @param args
@@ -54,11 +43,7 @@ public class IRCTime implements IRCHandler
 				try
 				{
 					log.info("IRCTimeを起動します。");
-					System.setProperty("java.net.useSystemProxies", "true");
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
 					IRCTime app = new IRCTime();
-					app.createWindow().setVisible(true);
 					app.login();
 				}
 				catch (Throwable x)
@@ -69,133 +54,28 @@ public class IRCTime implements IRCHandler
 		});
 	}
 
-	private Window createWindow()
+	public IRCTime()
 	{
-		tabPanel.setTabPlacement(JTabbedPane.BOTTOM);
+		window = createWindow();
+		window.setVisible(true);
+	}
 
-		JFrame window = new JFrame("IRCTime");
+	private ChatWindow createWindow()
+	{
+//		tabPanel.setTabPlacement(JTabbedPane.BOTTOM);
+
+//		JFrame window = new JFrame("IRCTime");
+		ChatWindow window = new ChatWindow("IRCTime");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setJMenuBar(createMenuBar());
-		window.add(tabPanel);
+//		window.setJMenuBar(createMenuBar());
+//		window.add(tabPanel);
 		window.setSize(500, 400);
 
-		option = new OptionBox(window);
+//		option = new OptionBox(window);
 //		option.setVisible(true);
 //		login();
 
 		return window;
-	}
-
-	@SuppressWarnings("serial")
-	private JMenuBar createMenuBar()
-	{
-		AbstractAction loginAction = new AbstractAction()
-		{
-			{
-				this.putValue(NAME, "サーバへ接続...");
-				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta L"));
-			}
-
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				option.setVisible(true);
-			}
-		};
-
-//		JMenu ircMenu = new JMenu("IRC");
-//		ircMenu.add(loginAction);
-//		ircMenu.add(nickItem);
-//		ircMenu.addSeparator();
-//		ircMenu.add(joinItem);
-//		ircMenu.add(partItem);
-//		ircMenu.add(modeItem);
-//		ircMenu.add(topicItem);
-//		ircMenu.addSeparator();
-//		ircMenu.add(quitItem);
-
-		JMenu awayMenu = new JMenu("自分の状況");
-		awayMenu.add("チャット可能");
-		awayMenu.addSeparator();
-		awayMenu.add("不在");
-		awayMenu.add("昼食のため外出中");
-		awayMenu.add("電話中");
-		awayMenu.add("会議中");
-		awayMenu.addSeparator();
-		awayMenu.add("不在メッセージをカスタマイズ...");
-
-		JMenu chatMenu = new JMenu("チャット");
-		chatMenu.add(loginAction);
-		chatMenu.add("ニックネームを変更...");
-		chatMenu.add(awayMenu);
-		chatMenu.addSeparator();
-		chatMenu.add("情報を見る");
-		chatMenu.addSeparator();
-		chatMenu.add("チャットに参加...");
-//		chatMenu.add("チャットへの招待...");
-//		chatMenu.add("チャットを閉じる...");
-		chatMenu.add("メンバーを追加...");
-		chatMenu.add("チャットを離脱...");
-		chatMenu.addSeparator();
-		chatMenu.add("メッセージを送信...");
-		chatMenu.add("コマンドを送信...");
-		chatMenu.add("CTCP コマンドを送信...");
-		chatMenu.add("アクションを送信...");
-
-		JMenu memberMenu = new JMenu("メンバー");
-		memberMenu.add("ダイレクトメッセージを送信...");
-		memberMenu.add("ファイルを送信...");
-		memberMenu.addSeparator();
-		memberMenu.add("メンバー情報を見る");
-		memberMenu.addSeparator();
-		memberMenu.add("なるとを付ける");
-		memberMenu.add("なるとを外す");
-		memberMenu.add("発言権を付ける");
-		memberMenu.add("発言権を外す");
-		memberMenu.addSeparator();
-		memberMenu.add("キック");
-
-		JMenu windowMenu = new JMenu("ウインドウ");
-		windowMenu.add("しまう");
-		windowMenu.add("拡大／縮小");
-		windowMenu.addSeparator();
-		windowMenu.add("すべてを手前に移動");
-		windowMenu.addSeparator();
-		windowMenu.add("前のチャット");
-		windowMenu.add("次のチャット");
-		windowMenu.addSeparator();
-		windowMenu.add("ファイル転送");
-
-		JMenuBar menuBar = new JMenuBar();
-//		menuBar.add(ircMenu);
-		menuBar.add(chatMenu);
-		menuBar.add(memberMenu);
-		menuBar.add(windowMenu);
-		return menuBar;
-	}
-
-	private ChatPanel getTab(String name)
-	{
-		int index = tabPanel.indexOfTab(name);
-		if (index < 0)
-		{
-			ChatPanel tab = new ChatPanel();
-			tab.setName(name);
-//			tab.setTopic(name);
-			tabPanel.addTab(name, tab);
-			return tab;
-		}
-		else
-		{
-			ChatPanel tab = (ChatPanel)tabPanel.getComponentAt(index);
-			return tab;
-		}
-	}
-
-	ChatPanel currentTab()
-	{
-		ChatPanel tab = (ChatPanel)tabPanel.getSelectedComponent();
-		return tab;
 	}
 
 	public void login()
@@ -208,7 +88,7 @@ public class IRCTime implements IRCHandler
 //			String nick = "mybot";
 //			String pass = null;
 			String host = "cafebabe.ddo.jp";
-			getTab(host);
+			window.getTab(host);
 			int port = 6667;
 			String nick = "tarchan";
 			String pass = "mahotai!";
@@ -226,7 +106,7 @@ public class IRCTime implements IRCHandler
 //		this.channels = channels;
 		IRCClient irc = IRCClient.createClient(host, port, nick, pass)
 			.on(this)
-			.on(new NamesHandler(this))
+			.on(new NamesHandler(window))
 //			.on("001", this)
 //			.on("privmsg", this)
 //			.on("notice", this)
@@ -255,7 +135,7 @@ public class IRCTime implements IRCHandler
 //			ChatPanel panel = currentTab();
 //			panel.appendLine(text);
 			String text = String.format("%s: %s", nick, msg);
-			appendLine(chan, text);
+			window.appendLine(chan, text);
 //			if (!chan.equals(irc.getNick()))
 //			{
 //				irc.privmsg(chan, msg);
@@ -278,13 +158,13 @@ public class IRCTime implements IRCHandler
 			String nick = message.getPrefix();
 			String chan = message.getTrailing();
 			String text = String.format("join %s", nick);
-			appendLine(chan, text);
+			window.appendLine(chan, text);
 		}
 		else if (command.equals("332"))
 		{
 			String chan = message.getParam(1);
 			String text = message.getTrailing();
-			setTopic(chan, text);
+			window.setTopic(chan, text);
 		}
 		else if (command.equals("PING"))
 		{
@@ -303,42 +183,22 @@ public class IRCTime implements IRCHandler
 		}
 		else
 		{
+			String host = irc.getHost();
 			String text = message.toString();
-			ChatPanel panel = currentTab();
-			panel.appendLine(text);
+			window.appendLine(host, text);
+//			ChatPanel panel = window.currentTab();
+//			panel.appendLine(text);
 		}
-	}
-
-	void appendLine(String name, String text)
-	{
-		ChatPanel tab = getTab(name);
-		tab.appendLine(text);
-	}
-
-	void setNames(String name, String[] names)
-	{
-		if (name == null) throw new RuntimeException("チャンネル名が見つかりません。");
-		if (names == null) throw new RuntimeException("リストが見つかりません。");
-		ChatPanel tab = getTab(name);
-		if (tab == null) throw new RuntimeException("タブが見つかりません。");
-		tab.setNames(names);
-	}
-
-	void setTopic(String name, String text)
-	{
-		ChatPanel tab = getTab(name);
-		tab.setTopic(text);
 	}
 }
 
 class NamesHandler implements IRCHandler
 {
-	IRCTime app;
-
+	ChatWindow app;
 
 	ArrayList<String> list = new ArrayList<String>();
 
-	NamesHandler(IRCTime app)
+	NamesHandler(ChatWindow app)
 	{
 		this.app = app;
 	}
