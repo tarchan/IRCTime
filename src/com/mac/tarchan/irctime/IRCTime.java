@@ -4,17 +4,24 @@
 package com.mac.tarchan.irctime;
 
 import java.awt.Window;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.mac.tarchan.desktop.DesktopSupport;
+import com.mac.tarchan.desktop.OptionBox;
+import com.mac.tarchan.desktop.SexyControl;
 import com.mac.tarchan.irc.IRCClient;
 import com.mac.tarchan.irc.IRCEvent;
 import com.mac.tarchan.irc.IRCHandler;
@@ -30,12 +37,17 @@ public class IRCTime implements IRCHandler
 
 	private JTabbedPane tabPanel = new JTabbedPane();
 
+	private OptionBox option;
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args)
 	{
-		SwingUtilities.invokeLater(new Runnable()
+		SexyControl.useScreenMenuBar();
+		SexyControl.setAppleMenuAboutName("IRCTime");
+		DesktopSupport.useSystemLookAndFeel();
+		DesktopSupport.execute(new Runnable()
 		{
 			public void run()
 			{
@@ -57,18 +69,109 @@ public class IRCTime implements IRCHandler
 		});
 	}
 
-	Window createWindow()
+	private Window createWindow()
 	{
 		tabPanel.setTabPlacement(JTabbedPane.BOTTOM);
 
 		JFrame window = new JFrame("IRCTime");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setJMenuBar(createMenuBar());
 		window.add(tabPanel);
 		window.setSize(500, 400);
 
+		option = new OptionBox(window);
+//		option.setVisible(true);
 //		login();
 
 		return window;
+	}
+
+	@SuppressWarnings("serial")
+	private JMenuBar createMenuBar()
+	{
+		AbstractAction loginAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "サーバへ接続...");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta L"));
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				option.setVisible(true);
+			}
+		};
+
+//		JMenu ircMenu = new JMenu("IRC");
+//		ircMenu.add(loginAction);
+//		ircMenu.add(nickItem);
+//		ircMenu.addSeparator();
+//		ircMenu.add(joinItem);
+//		ircMenu.add(partItem);
+//		ircMenu.add(modeItem);
+//		ircMenu.add(topicItem);
+//		ircMenu.addSeparator();
+//		ircMenu.add(quitItem);
+
+		JMenu awayMenu = new JMenu("自分の状況");
+		awayMenu.add("チャット可能");
+		awayMenu.addSeparator();
+		awayMenu.add("不在");
+		awayMenu.add("昼食のため外出中");
+		awayMenu.add("電話中");
+		awayMenu.add("会議中");
+		awayMenu.addSeparator();
+		awayMenu.add("不在メッセージをカスタマイズ...");
+
+		JMenu chatMenu = new JMenu("チャット");
+		chatMenu.add(loginAction);
+		chatMenu.add("ニックネームを変更...");
+		chatMenu.add(awayMenu);
+		chatMenu.addSeparator();
+		chatMenu.add("情報を見る");
+		chatMenu.addSeparator();
+		chatMenu.add("チャットに参加...");
+//		chatMenu.add("チャットへの招待...");
+//		chatMenu.add("チャットを閉じる...");
+		chatMenu.add("メンバーを追加...");
+		chatMenu.add("チャットを離脱...");
+		chatMenu.addSeparator();
+		chatMenu.add("メッセージを送信...");
+		chatMenu.add("コマンドを送信...");
+		chatMenu.add("CTCP コマンドを送信...");
+		chatMenu.add("アクションを送信...");
+
+		JMenu memberMenu = new JMenu("メンバー");
+		memberMenu.add("ダイレクトメッセージを送信...");
+		memberMenu.add("ファイルを送信...");
+		memberMenu.addSeparator();
+		memberMenu.add("メンバー情報を見る");
+		memberMenu.addSeparator();
+		memberMenu.add("なるとを付ける");
+		memberMenu.add("なるとを外す");
+		memberMenu.add("発言権を付ける");
+		memberMenu.add("発言権を外す");
+		memberMenu.addSeparator();
+		memberMenu.add("キック");
+
+		JMenu windowMenu = new JMenu("ウインドウ");
+		windowMenu.add("しまう");
+		windowMenu.add("拡大／縮小");
+		windowMenu.addSeparator();
+		windowMenu.add("すべてを手前に移動");
+		windowMenu.addSeparator();
+		windowMenu.add("前のチャット");
+		windowMenu.add("次のチャット");
+		windowMenu.addSeparator();
+		windowMenu.add("ファイル転送");
+
+		JMenuBar menuBar = new JMenuBar();
+//		menuBar.add(ircMenu);
+		menuBar.add(chatMenu);
+		menuBar.add(memberMenu);
+		menuBar.add(windowMenu);
+		return menuBar;
 	}
 
 	private ChatPanel getTab(String name)

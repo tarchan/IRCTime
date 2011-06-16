@@ -45,7 +45,7 @@ public class ChatPanel extends JPanel
 	{
 		createMain(this);
 
-		EventQuery.ready(this)
+		EventQuery.from(this)
 			.button().click(this).end()
 			.input().click(this).end();
 	}
