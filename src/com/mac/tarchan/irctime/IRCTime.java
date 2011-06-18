@@ -127,6 +127,7 @@ public class IRCTime implements IRCHandler
 		if (command.equals("PRIVMSG"))
 		{
 			// privmsg
+			long when = message.getWhen();
 			String nick = message.getPrefix();
 			String chan = message.getParam(0);
 			String msg = message.getTrailing();
@@ -134,7 +135,7 @@ public class IRCTime implements IRCHandler
 //			String text = String.format("%s:%s> %s", chan, nick, msg);
 //			ChatPanel panel = currentTab();
 //			panel.appendLine(text);
-			String text = String.format("%s: %s", nick, msg);
+			String text = String.format("%tH:%<tM %s: %s", when, nick, msg);
 			window.appendLine(chan, text);
 //			if (!chan.equals(irc.getNick()))
 //			{
