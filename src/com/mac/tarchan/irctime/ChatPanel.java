@@ -31,6 +31,8 @@ public class ChatPanel extends JPanel
 
 	private DefaultListModel nameModel = new DefaultListModel();
 
+	private String topicText;
+
 	private JTextField inputText = new JTextField(30);
 
 	private JButton sendButton = new JButton("Send");
@@ -107,10 +109,17 @@ public class ChatPanel extends JPanel
 		{
 			nameModel.addElement(name);
 		}
+		updateTopic();
 	}
 
 	public void setTopic(String text)
 	{
-		topicLabel.setText(text);
+		topicText = text;
+		updateTopic();
+	}
+
+	protected void updateTopic()
+	{
+		topicLabel.setText(String.format("%s (%,d)", topicText, nameModel.size()));
 	}
 }
