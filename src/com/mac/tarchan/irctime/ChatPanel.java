@@ -59,7 +59,7 @@ public class ChatPanel extends JPanel
 		sendButton.setName("sendButton");
 //		mainText.setName("mainText");
 		mainText.setEditable(false);
-		nameList.setFixedCellWidth(150);
+		nameList.setFixedCellWidth(100);
 
 		JScrollPane contentPane = new JScrollPane(mainText);
 		JScrollPane infoPane = new JScrollPane(nameList);

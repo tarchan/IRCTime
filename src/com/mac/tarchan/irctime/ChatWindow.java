@@ -54,7 +54,7 @@ public class ChatWindow extends JFrame
 			}
 
 			@Override
-			public void actionPerformed(ActionEvent arg0)
+			public void actionPerformed(ActionEvent evt)
 			{
 				option.setVisible(true);
 			}
