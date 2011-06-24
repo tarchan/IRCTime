@@ -42,13 +42,13 @@ public class IRCTime implements IRCHandler
 			{
 				try
 				{
-					log.info("IRCTime‚ğ‹N“®‚µ‚Ü‚·B");
+					log.info("IRCTimeã‚’èµ·å‹•ã—ã¾ã™ã€‚");
 					IRCTime app = new IRCTime();
 					app.login();
 				}
 				catch (Throwable x)
 				{
-					log.info("IRCTime‚ğ’†~‚µ‚Ü‚·B", x);
+					log.info("IRCTimeã‚’ä¸­æ­¢ã—ã¾ã™ã€‚", x);
 				}
 			}
 		});
@@ -82,7 +82,7 @@ public class IRCTime implements IRCHandler
 	{
 		try
 		{
-			// irc.livedoor.ne.jpAirc6.livedoor.ne.jpA125.6.255.10
+			// irc.livedoor.ne.jpã€irc6.livedoor.ne.jpã€125.6.255.10
 //			String host = "irc.livedoor.ne.jp";
 //			int port = 6667;
 //			String nick = "mybot";
@@ -97,7 +97,7 @@ public class IRCTime implements IRCHandler
 		}
 		catch (IOException x)
 		{
-			throw new RuntimeException("ƒT[ƒo[‚ÉÚ‘±‚Å‚«‚Ü‚¹‚ñB", x);
+			throw new RuntimeException("ã‚µãƒ¼ãƒãƒ¼ã«æ¥ç¶šã§ãã¾ã›ã‚“ã€‚", x);
 		}
 	}
 
@@ -112,13 +112,13 @@ public class IRCTime implements IRCHandler
 //			.on("notice", this)
 //			.on("ping", this)
 			.connect();
-		System.out.println("Ú‘±: " + irc);
+		System.out.println("æ¥ç¶š: " + irc);
 	}
 
 	public void onMessage(IRCEvent event)
 	{
 		IRCMessage message = event.getMessage();
-//		System.out.println("ƒƒbƒZ[ƒW: " + message);
+//		System.out.println("ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸: " + message);
 //		message.getServer().send("me, too.");
 		IRCClient irc = event.getClient();
 //		client.postMessage("privmsg", "me, too.");

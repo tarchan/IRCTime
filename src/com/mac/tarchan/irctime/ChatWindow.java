@@ -32,7 +32,7 @@ public class ChatWindow extends JFrame
 	public ChatWindow(String tile)
 	{
 		super(tile);
-		log.debug("ƒEƒCƒ“ƒhƒE‚ğì¬: " + tile);
+		log.debug("ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆ: " + tile);
 		tabPanel.setTabPlacement(JTabbedPane.BOTTOM);
 		add(tabPanel);
 		setJMenuBar(createMenuBar());
@@ -49,7 +49,7 @@ public class ChatWindow extends JFrame
 		AbstractAction loginAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "ƒT[ƒo‚ÖÚ‘±...");
+				this.putValue(NAME, "ã‚µãƒ¼ãƒã¸æ¥ç¶š...");
 				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta L"));
 			}
 
@@ -71,57 +71,57 @@ public class ChatWindow extends JFrame
 //		ircMenu.addSeparator();
 //		ircMenu.add(quitItem);
 
-		JMenu awayMenu = new JMenu("©•ª‚Ìó‹µ");
-		awayMenu.add("ƒ`ƒƒƒbƒg‰Â”\");
+		JMenu awayMenu = new JMenu("è‡ªåˆ†ã®çŠ¶æ³");
+		awayMenu.add("ãƒãƒ£ãƒƒãƒˆå¯èƒ½");
 		awayMenu.addSeparator();
-		awayMenu.add("•sİ");
-		awayMenu.add("’‹H‚Ì‚½‚ßŠOo’†");
-		awayMenu.add("“d˜b’†");
-		awayMenu.add("‰ï‹c’†");
+		awayMenu.add("ä¸åœ¨");
+		awayMenu.add("æ˜¼é£Ÿã®ãŸã‚å¤–å‡ºä¸­");
+		awayMenu.add("é›»è©±ä¸­");
+		awayMenu.add("ä¼šè­°ä¸­");
 		awayMenu.addSeparator();
-		awayMenu.add("•sİƒƒbƒZ[ƒW‚ğƒJƒXƒ^ƒ}ƒCƒY...");
+		awayMenu.add("ä¸åœ¨ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º...");
 
-		JMenu chatMenu = new JMenu("ƒ`ƒƒƒbƒg");
+		JMenu chatMenu = new JMenu("ãƒãƒ£ãƒƒãƒˆ");
 		chatMenu.add(loginAction);
-		chatMenu.add("ƒjƒbƒNƒl[ƒ€‚ğ•ÏX...");
+		chatMenu.add("ãƒ‹ãƒƒã‚¯ãƒãƒ¼ãƒ ã‚’å¤‰æ›´...");
 		chatMenu.add(awayMenu);
 		chatMenu.addSeparator();
-		chatMenu.add("î•ñ‚ğŒ©‚é");
+		chatMenu.add("æƒ…å ±ã‚’è¦‹ã‚‹");
 		chatMenu.addSeparator();
-		chatMenu.add("ƒ`ƒƒƒbƒg‚ÉQ‰Á...");
-//		chatMenu.add("ƒ`ƒƒƒbƒg‚Ö‚Ìµ‘Ò...");
-//		chatMenu.add("ƒ`ƒƒƒbƒg‚ğ•Â‚¶‚é...");
-		chatMenu.add("ƒƒ“ƒo[‚ğ’Ç‰Á...");
-		chatMenu.add("ƒ`ƒƒƒbƒg‚ğ—£’E...");
+		chatMenu.add("ãƒãƒ£ãƒƒãƒˆã«å‚åŠ ...");
+//		chatMenu.add("ãƒãƒ£ãƒƒãƒˆã¸ã®æ‹›å¾…...");
+//		chatMenu.add("ãƒãƒ£ãƒƒãƒˆã‚’é–‰ã˜ã‚‹...");
+		chatMenu.add("ãƒ¡ãƒ³ãƒãƒ¼ã‚’è¿½åŠ ...");
+		chatMenu.add("ãƒãƒ£ãƒƒãƒˆã‚’é›¢è„±...");
 		chatMenu.addSeparator();
-		chatMenu.add("ƒƒbƒZ[ƒW‚ğ‘—M...");
-		chatMenu.add("ƒRƒ}ƒ“ƒh‚ğ‘—M...");
-		chatMenu.add("CTCP ƒRƒ}ƒ“ƒh‚ğ‘—M...");
-		chatMenu.add("ƒAƒNƒVƒ‡ƒ“‚ğ‘—M...");
+		chatMenu.add("ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ä¿¡...");
+		chatMenu.add("ã‚³ãƒãƒ³ãƒ‰ã‚’é€ä¿¡...");
+		chatMenu.add("CTCP ã‚³ãƒãƒ³ãƒ‰ã‚’é€ä¿¡...");
+		chatMenu.add("ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’é€ä¿¡...");
 
-		JMenu memberMenu = new JMenu("ƒƒ“ƒo[");
-		memberMenu.add("ƒ_ƒCƒŒƒNƒgƒƒbƒZ[ƒW‚ğ‘—M...");
-		memberMenu.add("ƒtƒ@ƒCƒ‹‚ğ‘—M...");
+		JMenu memberMenu = new JMenu("ãƒ¡ãƒ³ãƒãƒ¼");
+		memberMenu.add("ãƒ€ã‚¤ãƒ¬ã‚¯ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ä¿¡...");
+		memberMenu.add("ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é€ä¿¡...");
 		memberMenu.addSeparator();
-		memberMenu.add("ƒƒ“ƒo[î•ñ‚ğŒ©‚é");
+		memberMenu.add("ãƒ¡ãƒ³ãƒãƒ¼æƒ…å ±ã‚’è¦‹ã‚‹");
 		memberMenu.addSeparator();
-		memberMenu.add("‚È‚é‚Æ‚ğ•t‚¯‚é");
-		memberMenu.add("‚È‚é‚Æ‚ğŠO‚·");
-		memberMenu.add("”­Œ¾Œ ‚ğ•t‚¯‚é");
-		memberMenu.add("”­Œ¾Œ ‚ğŠO‚·");
+		memberMenu.add("ãªã‚‹ã¨ã‚’ä»˜ã‘ã‚‹");
+		memberMenu.add("ãªã‚‹ã¨ã‚’å¤–ã™");
+		memberMenu.add("ç™ºè¨€æ¨©ã‚’ä»˜ã‘ã‚‹");
+		memberMenu.add("ç™ºè¨€æ¨©ã‚’å¤–ã™");
 		memberMenu.addSeparator();
-		memberMenu.add("ƒLƒbƒN");
+		memberMenu.add("ã‚­ãƒƒã‚¯");
 
-		JMenu windowMenu = new JMenu("ƒEƒCƒ“ƒhƒE");
-		windowMenu.add("‚µ‚Ü‚¤");
-		windowMenu.add("Šg‘å^k¬");
+		JMenu windowMenu = new JMenu("ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦");
+		windowMenu.add("ã—ã¾ã†");
+		windowMenu.add("æ‹¡å¤§ï¼ç¸®å°");
 		windowMenu.addSeparator();
-		windowMenu.add("‚·‚×‚Ä‚ğè‘O‚ÉˆÚ“®");
+		windowMenu.add("ã™ã¹ã¦ã‚’æ‰‹å‰ã«ç§»å‹•");
 		windowMenu.addSeparator();
-		windowMenu.add("‘O‚Ìƒ`ƒƒƒbƒg");
-		windowMenu.add("Ÿ‚Ìƒ`ƒƒƒbƒg");
+		windowMenu.add("å‰ã®ãƒãƒ£ãƒƒãƒˆ");
+		windowMenu.add("æ¬¡ã®ãƒãƒ£ãƒƒãƒˆ");
 		windowMenu.addSeparator();
-		windowMenu.add("ƒtƒ@ƒCƒ‹“]‘—");
+		windowMenu.add("ãƒ•ã‚¡ã‚¤ãƒ«è»¢é€");
 
 		JMenuBar menuBar = new JMenuBar();
 //		menuBar.add(ircMenu);
@@ -163,10 +163,10 @@ public class ChatWindow extends JFrame
 
 	void setNames(String name, String[] names)
 	{
-		if (name == null) throw new RuntimeException("ƒ`ƒƒƒ“ƒlƒ‹–¼‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
-		if (names == null) throw new RuntimeException("ƒŠƒXƒg‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+		if (name == null) throw new RuntimeException("ãƒãƒ£ãƒ³ãƒãƒ«åãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
+		if (names == null) throw new RuntimeException("ãƒªã‚¹ãƒˆãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
 		ChatPanel tab = getTab(name);
-		if (tab == null) throw new RuntimeException("ƒ^ƒu‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+		if (tab == null) throw new RuntimeException("ã‚¿ãƒ–ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
 		tab.setNames(names);
 	}
 
