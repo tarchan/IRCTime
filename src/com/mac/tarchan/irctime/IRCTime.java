@@ -128,10 +128,9 @@ public class IRCTime implements IRCHandler
 		{
 			// privmsg
 			long when = message.getWhen();
-			String nick = message.getPrefix();
+			String nick = message.getSimpleName();
 			String chan = message.getParam(0);
 			String msg = message.getTrailing();
-			nick = IRCName.getSimpleName(nick);
 //			String text = String.format("%s:%s> %s", chan, nick, msg);
 //			ChatPanel panel = currentTab();
 //			panel.appendLine(text);
