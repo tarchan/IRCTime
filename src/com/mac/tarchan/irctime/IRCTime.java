@@ -5,6 +5,7 @@ package com.mac.tarchan.irctime;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 
@@ -17,21 +18,24 @@ import com.mac.tarchan.irc.IRCClient;
 import com.mac.tarchan.irc.IRCEvent;
 import com.mac.tarchan.irc.IRCHandler;
 import com.mac.tarchan.irc.IRCMessage;
-import com.mac.tarchan.irc.IRCName;
+import com.mac.tarchan.irc.IRCPrefix;
+import com.mac.tarchan.irc.util.IRCBotAdapter;
 
 /**
  * IRCTime
  */
-public class IRCTime implements IRCHandler
+public class IRCTime extends IRCBotAdapter
 {
 	private static final Log log = LogFactory.getLog(IRCTime.class);
+
+	private String[] channels;
 
 	private ChatWindow window;
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		SexyControl.useScreenMenuBar();
 		SexyControl.setAppleMenuAboutName("IRCTime");
@@ -44,7 +48,7 @@ public class IRCTime implements IRCHandler
 				{
 					log.info("IRCTimeを起動します。");
 					IRCTime app = new IRCTime();
-					app.login();
+					app.login(args);
 				}
 				catch (Throwable x)
 				{
@@ -78,22 +82,24 @@ public class IRCTime implements IRCHandler
 		return window;
 	}
 
-	public void login()
+	public void login(String[] args)
 	{
 		try
 		{
-			// irc.livedoor.ne.jp、irc6.livedoor.ne.jp、125.6.255.10
-//			String host = "irc.livedoor.ne.jp";
-//			int port = 6667;
-//			String nick = "mybot";
-//			String pass = null;
-			String host = "cafebabe.ddo.jp";
-			window.getTab(host);
-			int port = 6667;
-			String nick = "tarchan";
-			String pass = "mahotai!";
-			String[] channles = {"#javabreak"};
-			login(host, port, nick, pass, channles);
+			if (args.length < 4)
+			{
+				System.out.println("Usage: IRCTime <ホスト名> <ポート番号> <ニックネーム> <パスワード> <チャンネル名>");
+				throw new IllegalArgumentException("引数が不足しています。: " + args.length);
+			}
+			String host = args[0];
+			int port = Integer.parseInt(args[1]);
+			String nick = args[2];
+			String pass = args[3];
+			String[] channels = Arrays.asList(args).subList(4, args.length).toArray(new String[]{});
+			this.channels = channels;
+			log.debug("channels=" + Arrays.toString(channels));
+			login(host, port, nick, pass);
+//			login(host, port, nick, pass, channles);
 		}
 		catch (IOException x)
 		{
@@ -101,18 +107,110 @@ public class IRCTime implements IRCHandler
 		}
 	}
 
-	public void login(String host, int port, String nick, String pass, String[] channels) throws IOException
+//	public void login(String host, int port, String nick, String pass, String[] channels) throws IOException
+//	{
+////		this.channels = channels;
+//		IRCClient irc = IRCClient.createClient(host, port, nick, pass)
+//			.on(this)
+//			.on(new NamesHandler(window))
+////			.on("001", this)
+////			.on("privmsg", this)
+////			.on("notice", this)
+////			.on("ping", this)
+//			.start();
+//		System.out.println("接続: " + irc);
+//	}
+
+	@Override
+	public void onStart()
 	{
-//		this.channels = channels;
-		IRCClient irc = IRCClient.createClient(host, port, nick, pass)
-			.on(this)
-			.on(new NamesHandler(window))
-//			.on("001", this)
-//			.on("privmsg", this)
-//			.on("notice", this)
-//			.on("ping", this)
-			.connect();
-		System.out.println("接続: " + irc);
+		log.info("接続しました。");
+		for (String channel : channels)
+		{
+			irc.join(channel);
+		}
+	}
+
+	@Override
+	public void onNick(String oldNick, String newNick)
+	{
+		String nowNick = irc.getUserNick();
+		String text = String.format("%s -> %s (%s)", oldNick, newNick, nowNick);
+		log.info(text);
+//		window.appendLine(text);
+	}
+
+	@Override
+	public void onJoin(String channel, IRCPrefix prefix)
+	{
+		String nick = prefix.getNick();
+		String text = String.format("join %s", nick);
+		window.appendLine(channel, text);
+	}
+
+	@Override
+	public void onNames(String channel, String[] names)
+	{
+		window.setNames(channel, names);
+	}
+
+	@Override
+	public void onTopic(String channel, String topic)
+	{
+		window.setTopic(channel, topic);
+	}
+
+	@Override
+	public void onPart(String channel, IRCPrefix prefix)
+	{
+		// TODO 自動生成されたメソッド・スタブ
+		super.onPart(channel, prefix);
+	}
+
+	@Override
+	public void onQuit(IRCPrefix prefix, String text)
+	{
+		// TODO 自動生成されたメソッド・スタブ
+		super.onQuit(prefix, text);
+	}
+
+	@Override
+	public void onChannelMode(String channel, String mode)
+	{
+		// TODO 自動生成されたメソッド・スタブ
+		super.onChannelMode(channel, mode);
+	}
+
+	@Override
+	public void onMessage(IRCMessage message)
+	{
+		long when = message.getWhen();
+		String nick = message.getPrefix().getNick();
+		String chan = message.getParam(0);
+		String msg = message.getTrailing();
+		String text = String.format("%tH:%<tM %s: %s", when, nick, msg);
+		window.appendLine(chan, text);
+	}
+
+	@Override
+	public void onDirectMessage(IRCMessage message)
+	{
+		// TODO 自動生成されたメソッド・スタブ
+		super.onDirectMessage(message);
+	}
+
+	@Override
+	public void onNotice(IRCMessage message)
+	{
+		// TODO 自動生成されたメソッド・スタブ
+		super.onNotice(message);
+	}
+
+	@Override
+	public void onError(String text)
+	{
+		// TODO 自動生成されたメソッド・スタブ
+		super.onError(text);
 	}
 
 	public void onMessage(IRCEvent event)
@@ -128,7 +226,7 @@ public class IRCTime implements IRCHandler
 		{
 			// privmsg
 			long when = message.getWhen();
-			String nick = message.getSimpleName();
+			String nick = message.getPrefix().getNick();
 			String chan = message.getParam(0);
 			String msg = message.getTrailing();
 //			String text = String.format("%s:%s> %s", chan, nick, msg);
@@ -147,15 +245,15 @@ public class IRCTime implements IRCHandler
 		}
 		else if (command.equals("NICK"))
 		{
-			String nowNick = irc.getNick();
-			String oldNick = IRCName.getSimpleName(message.getPrefix());
+			String nowNick = irc.getUserNick();
+			String oldNick = message.getPrefix().getNick();
 			String newNick = message.getTrailing();
 			log.debug(String.format("%s -> %s (%s)", oldNick, newNick, nowNick));
 //			String text = String.format("%s -> %s (%s)", oldNick, newNick, nowNick);
 		}
 		else if (command.equals("JOIN"))
 		{
-			String nick = message.getPrefix();
+			String nick = message.getPrefix().getNick();
 			String chan = message.getTrailing();
 			String text = String.format("join %s", nick);
 			window.appendLine(chan, text);
