@@ -4,7 +4,6 @@
 package com.mac.tarchan.irctime;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JFrame;
@@ -16,7 +15,6 @@ import com.mac.tarchan.desktop.DesktopSupport;
 import com.mac.tarchan.desktop.SexyControl;
 import com.mac.tarchan.irc.IRCClient;
 import com.mac.tarchan.irc.IRCEvent;
-import com.mac.tarchan.irc.IRCHandler;
 import com.mac.tarchan.irc.IRCMessage;
 import com.mac.tarchan.irc.IRCPrefix;
 import com.mac.tarchan.irc.util.IRCBotAdapter;
@@ -168,10 +166,10 @@ public class IRCTime extends IRCBotAdapter
 	}
 
 	@Override
-	public void onQuit(IRCPrefix prefix, String text)
+	public void onQuit(String text, IRCPrefix prefix)
 	{
 		// TODO 自動生成されたメソッド・スタブ
-		super.onQuit(prefix, text);
+		super.onQuit(text, prefix);
 	}
 
 	@Override
@@ -186,8 +184,8 @@ public class IRCTime extends IRCBotAdapter
 	{
 		long when = message.getWhen();
 		String nick = message.getPrefix().getNick();
-		String chan = message.getParam(0);
-		String msg = message.getTrailing();
+		String chan = message.getParam0();
+		String msg = message.getTrail();
 		String text = String.format("%tH:%<tM %s: %s", when, nick, msg);
 		window.appendLine(chan, text);
 	}
@@ -204,6 +202,17 @@ public class IRCTime extends IRCBotAdapter
 	{
 		// TODO 自動生成されたメソッド・スタブ
 		super.onNotice(message);
+	}
+
+	@Override
+	public void onNumericReply(IRCMessage message)
+	{
+		String numeric = message.getCommand();
+		long when = message.getWhen();
+		String host = message.getPrefix().getNick();
+		String msg = message.getTrail();
+		String text = String.format("%tH:%<tM (%s) %s", when, numeric, msg);
+		window.appendLine(host, text);
 	}
 
 	@Override
@@ -228,7 +237,7 @@ public class IRCTime extends IRCBotAdapter
 			long when = message.getWhen();
 			String nick = message.getPrefix().getNick();
 			String chan = message.getParam(0);
-			String msg = message.getTrailing();
+			String msg = message.getTrail();
 //			String text = String.format("%s:%s> %s", chan, nick, msg);
 //			ChatPanel panel = currentTab();
 //			panel.appendLine(text);
@@ -247,27 +256,27 @@ public class IRCTime extends IRCBotAdapter
 		{
 			String nowNick = irc.getUserNick();
 			String oldNick = message.getPrefix().getNick();
-			String newNick = message.getTrailing();
+			String newNick = message.getTrail();
 			log.debug(String.format("%s -> %s (%s)", oldNick, newNick, nowNick));
 //			String text = String.format("%s -> %s (%s)", oldNick, newNick, nowNick);
 		}
 		else if (command.equals("JOIN"))
 		{
 			String nick = message.getPrefix().getNick();
-			String chan = message.getTrailing();
+			String chan = message.getTrail();
 			String text = String.format("join %s", nick);
 			window.appendLine(chan, text);
 		}
 		else if (command.equals("332"))
 		{
 			String chan = message.getParam(1);
-			String text = message.getTrailing();
+			String text = message.getTrail();
 			window.setTopic(chan, text);
 		}
 		else if (command.equals("PING"))
 		{
 			// ping
-			String payload = message.getTrailing();
+			String payload = message.getTrail();
 			irc.pong(payload);
 		}
 		else if (command.equals("ERROR"))
@@ -287,51 +296,5 @@ public class IRCTime extends IRCBotAdapter
 //			ChatPanel panel = window.currentTab();
 //			panel.appendLine(text);
 		}
-	}
-}
-
-class NamesHandler implements IRCHandler
-{
-	ChatWindow app;
-
-	ArrayList<String> list = new ArrayList<String>();
-
-	NamesHandler(ChatWindow app)
-	{
-		this.app = app;
-	}
-
-	@Override
-	public void onMessage(IRCEvent event)
-	{
-		IRCMessage message = event.getMessage();
-		String command = message.getCommand();
-		if (command.equals("353"))
-		{
-			addNames(message);
-		}
-		else if (command.equals("366"))
-		{
-			fireNames(message);
-		}
-	}
-
-	void addNames(IRCMessage message)
-	{
-		String channel = message.getParam(2);
-		String[] names = message.getTrailing().split(" ");
-		for (String name : names)
-		{
-			list.add(name);
-		}
-		app.appendLine(channel, "add list: " + names.length);
-	}
-
-	void fireNames(IRCMessage message)
-	{
-		String channel = message.getParam(1);
-		String[] names = list.toArray(new String[]{});
-		app.setNames(channel, names);
-		list.clear();
 	}
 }
