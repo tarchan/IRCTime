@@ -13,16 +13,16 @@ import org.apache.commons.logging.LogFactory;
 
 import com.mac.tarchan.desktop.DesktopSupport;
 import com.mac.tarchan.desktop.SexyControl;
-import com.mac.tarchan.irc.IRCClient;
-import com.mac.tarchan.irc.IRCEvent;
-import com.mac.tarchan.irc.IRCMessage;
-import com.mac.tarchan.irc.IRCPrefix;
-import com.mac.tarchan.irc.util.IRCBotAdapter;
+import com.mac.tarchan.irc.client.IRCClient;
+import com.mac.tarchan.irc.client.IRCEvent;
+import com.mac.tarchan.irc.client.IRCMessage;
+import com.mac.tarchan.irc.client.IRCPrefix;
+import com.mac.tarchan.irc.client.util.BotAdapter;
 
 /**
  * IRCTime
  */
-public class IRCTime extends IRCBotAdapter
+public class IRCTime extends BotAdapter
 {
 	private static final Log log = LogFactory.getLog(IRCTime.class);
 
@@ -105,6 +105,11 @@ public class IRCTime extends IRCBotAdapter
 		}
 	}
 
+	private static String getTimeString(long when)
+	{
+		return String.format("%tH:%<tM", when);
+	}
+
 //	public void login(String host, int port, String nick, String pass, String[] channels) throws IOException
 //	{
 ////		this.channels = channels;
@@ -130,19 +135,10 @@ public class IRCTime extends IRCBotAdapter
 	}
 
 	@Override
-	public void onNick(String oldNick, String newNick)
+	public void onTopic(String channel, String topic)
 	{
-		String nowNick = irc.getUserNick();
-		String text = String.format("%s -> %s (%s)", oldNick, newNick, nowNick);
-		log.info(text);
-//		window.appendLine(text);
-	}
-
-	@Override
-	public void onJoin(String channel, IRCPrefix prefix)
-	{
-		String nick = prefix.getNick();
-		String text = String.format("join %s", nick);
+		window.setTopic(channel, topic);
+		String text = String.format("%s topic is set (%s)", channel, topic);
 		window.appendLine(channel, text);
 	}
 
@@ -150,33 +146,53 @@ public class IRCTime extends IRCBotAdapter
 	public void onNames(String channel, String[] names)
 	{
 		window.setNames(channel, names);
+		String text = String.format("%s names is set (%s)", channel, names.length);
+		window.appendLine(channel, text);
 	}
 
 	@Override
-	public void onTopic(String channel, String topic)
+	public void onNick(String oldNick, String newNick)
 	{
-		window.setTopic(channel, topic);
+		String nowNick = irc.getUserNick();
+		String text = String.format("%s -> %s (%s)", oldNick, newNick, nowNick);
+		log.info(text);
+//		window.appendLine(text);
+		// TODO ユーザリストに含まれるチャンネルすべてに表示
+	}
+
+	@Override
+	public void onJoin(String channel, IRCPrefix prefix)
+	{
+		long when = prefix.getWhen();
+		String nick = prefix.getNick();
+		String text = String.format("%s %s has joined (%s)", getTimeString(when), nick, prefix);
+		window.appendLine(channel, text);
 	}
 
 	@Override
 	public void onPart(String channel, IRCPrefix prefix)
 	{
-		// TODO 自動生成されたメソッド・スタブ
-		super.onPart(channel, prefix);
+		long when = prefix.getWhen();
+		String nick = prefix.getNick();
+		String text = String.format("%s %s has left %s (%s)", getTimeString(when), nick, channel, prefix);
+		window.appendLine(channel, text);
 	}
 
 	@Override
-	public void onQuit(String text, IRCPrefix prefix)
+	public void onQuit(String trail, IRCPrefix prefix)
 	{
-		// TODO 自動生成されたメソッド・スタブ
-		super.onQuit(text, prefix);
+		long when = prefix.getWhen();
+		String nick = prefix.getNick();
+		String text = String.format("%s %s has left IRC (%s)", getTimeString(when), nick, trail);
+		log.info(text);
+		// TODO ユーザリストに含まれるチャンネルすべてに表示
 	}
 
 	@Override
 	public void onChannelMode(String channel, String mode)
 	{
-		// TODO 自動生成されたメソッド・スタブ
-		super.onChannelMode(channel, mode);
+		String text = String.format("%s has changed mode %s", channel, mode);
+		window.appendLine(channel, text);
 	}
 
 	@Override
@@ -186,7 +202,7 @@ public class IRCTime extends IRCBotAdapter
 		String nick = message.getPrefix().getNick();
 		String chan = message.getParam0();
 		String msg = message.getTrail();
-		String text = String.format("%tH:%<tM %s: %s", when, nick, msg);
+		String text = String.format("%s %s: %s", getTimeString(when), nick, msg);
 		window.appendLine(chan, text);
 	}
 
