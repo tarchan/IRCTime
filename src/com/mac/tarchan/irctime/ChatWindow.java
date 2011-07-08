@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.mac.tarchan.desktop.OptionBox;
+import com.mac.tarchan.desktop.event.EventQuery;
 
 /**
  * ChatWindow
@@ -140,6 +141,11 @@ public class ChatWindow extends JFrame
 			tab.setName(name);
 //			tab.setTopic(name);
 			tabPanel.addTab(name, tab);
+
+			EventQuery.from(tab)
+//			.button().click(this).end()
+			.input().click(this, "inputText", "").end();
+
 			return tab;
 		}
 		else
@@ -147,6 +153,11 @@ public class ChatWindow extends JFrame
 			ChatPanel tab = (ChatPanel)tabPanel.getComponentAt(index);
 			return tab;
 		}
+	}
+
+	public void inputText(ActionEvent evt)
+	{
+		log.info(evt);
 	}
 
 //	public ChatPanel currentTab()
@@ -159,6 +170,19 @@ public class ChatWindow extends JFrame
 	{
 		ChatPanel tab = getTab(name);
 		tab.appendLine(text);
+	}
+
+	void appendLineForNick(String nick, String text)
+	{
+		int count = tabPanel.getTabCount();
+		for (int i = 0; i < count; i++)
+		{
+			ChatPanel tab = (ChatPanel)tabPanel.getTabComponentAt(i);
+			if (tab.containsNick(nick))
+			{
+				tab.appendLine(text);
+			}
+		}
 	}
 
 	void setNames(String name, String[] names)

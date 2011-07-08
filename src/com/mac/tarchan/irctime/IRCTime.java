@@ -135,29 +135,29 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onTopic(String channel, String topic)
+	public void onTopic(String channel, String topic, long when)
 	{
 		window.setTopic(channel, topic);
-		String text = String.format("%s topic is set (%s)", channel, topic);
+		String text = String.format("%s %s topic is set (%s)", getTimeString(when), channel, topic);
 		window.appendLine(channel, text);
 	}
 
 	@Override
-	public void onNames(String channel, String[] names)
+	public void onNames(String channel, String[] names, long when)
 	{
 		window.setNames(channel, names);
-		String text = String.format("%s names is set (%s)", channel, names.length);
+		String text = String.format("%s %s names is set (%s)", getTimeString(when), channel, names.length);
 		window.appendLine(channel, text);
 	}
 
 	@Override
-	public void onNick(String oldNick, String newNick)
+	public void onNick(String oldNick, String newNick, long when)
 	{
 		String nowNick = irc.getUserNick();
-		String text = String.format("%s -> %s (%s)", oldNick, newNick, nowNick);
+		String text = String.format("%s %s -> %s (%s)", getTimeString(when), oldNick, newNick, nowNick);
 		log.info(text);
-//		window.appendLine(text);
-		// TODO ユーザリストに含まれるチャンネルすべてに表示
+		window.appendLineForNick(oldNick, text);
+		// TODO ニックネームの変更に追従
 	}
 
 	@Override
@@ -184,8 +184,8 @@ public class IRCTime extends BotAdapter
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
 		String text = String.format("%s %s has left IRC (%s)", getTimeString(when), nick, trail);
-		log.info(text);
-		// TODO ユーザリストに含まれるチャンネルすべてに表示
+		window.appendLineForNick(nick, text);
+		// TODO ニックネームの削除に追従
 	}
 
 	@Override
@@ -238,7 +238,7 @@ public class IRCTime extends BotAdapter
 		super.onError(text);
 	}
 
-	public void onMessage(IRCEvent event)
+	public void _onMessage(IRCEvent event)
 	{
 		IRCMessage message = event.getMessage();
 //		System.out.println("メッセージ: " + message);

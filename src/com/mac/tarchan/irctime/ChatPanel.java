@@ -76,12 +76,18 @@ public class ChatPanel extends JPanel
 		return main;
 	}
 
+	/**
+	 * @see #sendButton()
+	 */
 	public void inputText()
 	{
 		log.debug("inputText");
 		sendButton.doClick();
 	}
 
+	/**
+	 * @see #inputMessage()
+	 */
 	public void sendButton()
 	{
 		log.debug("sendButton");
@@ -94,7 +100,6 @@ public class ChatPanel extends JPanel
 		inputText.setText(null);
 		if (text.trim().length() == 0) return;
 		appendLine(text);
-		
 	}
 
 	public void appendLine(String text)
@@ -121,5 +126,10 @@ public class ChatPanel extends JPanel
 	protected void updateTopic()
 	{
 		topicLabel.setText(String.format("%s (%,d)", topicText, nameModel.size()));
+	}
+
+	public boolean containsNick(String nick)
+	{
+		return nameModel.contains(nick);
 	}
 }
