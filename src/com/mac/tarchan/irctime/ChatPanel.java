@@ -63,6 +63,7 @@ public class ChatPanel extends JPanel
 
 		JScrollPane contentPane = new JScrollPane(mainText);
 		JScrollPane infoPane = new JScrollPane(nameList);
+		infoPane.setVisible(false);
 
 		Box inputBox = Box.createHorizontalBox();
 		inputBox.add(inputText);
@@ -115,6 +116,9 @@ public class ChatPanel extends JPanel
 		{
 			nameModel.addElement(name);
 		}
+		log.debug(nameList.getParent().getParent());
+		nameList.getParent().getParent().setVisible(true);
+//		revalidate();
 		updateTopic();
 	}
 

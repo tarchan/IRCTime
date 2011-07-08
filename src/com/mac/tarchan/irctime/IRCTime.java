@@ -88,7 +88,7 @@ public class IRCTime extends BotAdapter
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		window.setJMenuBar(createMenuBar());
 //		window.add(tabPanel);
-		window.setSize(640, 480);
+		window.setSize(600, 400);
 		window.setApp(this);
 
 //		option = new OptionBox(window);
