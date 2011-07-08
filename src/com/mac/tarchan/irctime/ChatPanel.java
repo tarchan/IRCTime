@@ -96,10 +96,11 @@ public class ChatPanel extends JPanel
 
 	void inputMessage()
 	{
+		log.debug("clearText");
 		String text = inputText.getText();
 		inputText.setText(null);
 		if (text.trim().length() == 0) return;
-		appendLine(text);
+//		appendLine(text);
 	}
 
 	public void appendLine(String text)

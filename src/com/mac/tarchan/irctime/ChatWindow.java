@@ -11,7 +11,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
-import javax.swing.text.JTextComponent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +29,8 @@ public class ChatWindow extends JFrame
 	private JTabbedPane tabPanel = new JTabbedPane();
 
 	private OptionBox option;
+
+	private IRCTime app;
 
 	public ChatWindow(String tile)
 	{
@@ -143,10 +144,7 @@ public class ChatWindow extends JFrame
 //			tab.setTopic(name);
 			tabPanel.addTab(name, tab);
 
-			EventQuery.from(tab).find("inputText").click(this, "inputText", "");
-//			.button().click(this).end()
-//			.input().click(this, "inputText", "").end();
-//			.input().click(this, "inputText", "source").end();
+			EventQuery.from(tab).find("inputText").click(app, "inputText", "");
 
 			return tab;
 		}
@@ -157,19 +155,9 @@ public class ChatWindow extends JFrame
 		}
 	}
 
-	public void inputText(ActionEvent evt)
+	public void setApp(IRCTime app)
 	{
-//		log.info(evt.getSource());
-		long when = evt.getWhen();
-		JTextComponent input = (JTextComponent)evt.getSource();
-		ChatPanel panel = (ChatPanel)input.getParent().getParent();
-		String channel = panel.getName();
-		String text = evt.getActionCommand();
-//		log.info(input.getParent());
-//		log.info(input.getParent().getParent());
-//		log.info(evt.getActionCommand());
-		String msg = String.format("%tH:%<tM %s %s", when, channel, text);
-		log.info(msg);
+		this.app = app;
 	}
 
 //	public ChatPanel currentTab()

@@ -3,10 +3,12 @@
  */
 package com.mac.tarchan.irctime;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Arrays;
 
 import javax.swing.JFrame;
+import javax.swing.text.JTextComponent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -80,12 +82,47 @@ public class IRCTime extends BotAdapter
 //		window.setJMenuBar(createMenuBar());
 //		window.add(tabPanel);
 		window.setSize(500, 400);
+		window.setApp(this);
 
 //		option = new OptionBox(window);
 //		option.setVisible(true);
 //		login();
 
 		return window;
+	}
+
+	public void inputText(ActionEvent evt)
+	{
+		try
+		{
+			log.debug(evt.getSource());
+			String text = evt.getActionCommand();
+			if (text.trim().length() == 0) return;
+
+			long when = evt.getWhen();
+			JTextComponent input = (JTextComponent)evt.getSource();
+			ChatPanel panel = (ChatPanel)input.getParent().getParent();
+			String channel = panel.getName();
+			String nick = irc.getUserNick();
+//			log.info(input.getParent());
+//			log.info(input.getParent().getParent());
+//			log.info(evt.getActionCommand());
+			String msg = String.format("%s %s %s", getTimeString(when), nick, text);
+//			log.info(msg);
+			window.appendLine(channel, msg);
+			if (text.startsWith("/"))
+			{
+				irc.postMessage(text.substring(1));
+			}
+			else
+			{
+				irc.privmsg(channel, text);
+			}
+		}
+		catch (RuntimeException x)
+		{
+			log.error("テキスト送信を中止しました。", x);
+		}
 	}
 
 	public void login(String[] args)
