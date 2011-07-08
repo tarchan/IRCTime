@@ -45,7 +45,15 @@ public class IRCTime extends BotAdapter
 				try
 				{
 					log.info("IRCTimeを起動します。");
-					IRCTime app = new IRCTime();
+					final IRCTime app = new IRCTime();
+					DesktopSupport.shutdown(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							app.irc.quit("Quit IRCTime");
+						}
+					});
 					app.login(args);
 				}
 				catch (Throwable x)
