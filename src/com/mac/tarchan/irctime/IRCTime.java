@@ -107,7 +107,7 @@ public class IRCTime extends BotAdapter
 //			log.info(input.getParent());
 //			log.info(input.getParent().getParent());
 //			log.info(evt.getActionCommand());
-			String msg = String.format("%s %s %s", getTimeString(when), nick, text);
+			String msg = String.format("%s %s: %s", getTimeString(when), nick, text);
 //			log.info(msg);
 			window.appendLine(channel, msg);
 			if (text.startsWith("/"))
@@ -254,8 +254,12 @@ public class IRCTime extends BotAdapter
 	@Override
 	public void onDirectMessage(IRCMessage message)
 	{
-		// TODO 自動生成されたメソッド・スタブ
-		super.onDirectMessage(message);
+		long when = message.getWhen();
+		String nick = message.getPrefix().getNick();
+//		String chan = message.getParam0();
+		String msg = message.getTrail();
+		String text = String.format("%s %s: %s", getTimeString(when), nick, msg);
+		window.appendLine(nick, text);
 	}
 
 	@Override
