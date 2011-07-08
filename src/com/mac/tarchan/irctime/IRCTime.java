@@ -53,7 +53,14 @@ public class IRCTime extends BotAdapter
 						@Override
 						public void run()
 						{
-							app.irc.quit("Quit IRCTime");
+							try
+							{
+								app.irc.quit("Quit IRCTime");
+								app.irc.close();
+							}
+							catch (IOException ignore)
+							{
+							}
 						}
 					});
 					app.login(args);
@@ -81,7 +88,7 @@ public class IRCTime extends BotAdapter
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		window.setJMenuBar(createMenuBar());
 //		window.add(tabPanel);
-		window.setSize(500, 400);
+		window.setSize(640, 480);
 		window.setApp(this);
 
 //		option = new OptionBox(window);
@@ -91,41 +98,7 @@ public class IRCTime extends BotAdapter
 		return window;
 	}
 
-	public void inputText(ActionEvent evt)
-	{
-		try
-		{
-			log.debug(evt.getSource());
-			String text = evt.getActionCommand();
-			if (text.trim().length() == 0) return;
-
-			long when = evt.getWhen();
-			JTextComponent input = (JTextComponent)evt.getSource();
-			ChatPanel panel = (ChatPanel)input.getParent().getParent();
-			String channel = panel.getName();
-			String nick = irc.getUserNick();
-//			log.info(input.getParent());
-//			log.info(input.getParent().getParent());
-//			log.info(evt.getActionCommand());
-			String msg = String.format("%s %s: %s", getTimeString(when), nick, text);
-//			log.info(msg);
-			window.appendLine(channel, msg);
-			if (text.startsWith("/"))
-			{
-				irc.postMessage(text.substring(1));
-			}
-			else
-			{
-				irc.privmsg(channel, text);
-			}
-		}
-		catch (RuntimeException x)
-		{
-			log.error("テキスト送信を中止しました。", x);
-		}
-	}
-
-	public void login(String[] args)
+	private void login(String[] args)
 	{
 		try
 		{
@@ -155,19 +128,48 @@ public class IRCTime extends BotAdapter
 		return String.format("%tH:%<tM", when);
 	}
 
-//	public void login(String host, int port, String nick, String pass, String[] channels) throws IOException
-//	{
-////		this.channels = channels;
-//		IRCClient irc = IRCClient.createClient(host, port, nick, pass)
-//			.on(this)
-//			.on(new NamesHandler(window))
-////			.on("001", this)
-////			.on("privmsg", this)
-////			.on("notice", this)
-////			.on("ping", this)
-//			.start();
-//		System.out.println("接続: " + irc);
-//	}
+	private boolean isHost(String name)
+	{
+		return name != null && !name.startsWith("#") && name.contains(".");
+	}
+
+	public void inputText(ActionEvent evt)
+	{
+		try
+		{
+			log.debug(evt.getSource());
+			String text = evt.getActionCommand();
+			if (text.trim().length() == 0) return;
+
+			long when = evt.getWhen();
+			JTextComponent input = (JTextComponent)evt.getSource();
+			ChatPanel panel = (ChatPanel)input.getParent().getParent();
+			String channel = panel.getName();
+			String nick = irc.getUserNick();
+//			log.info(input.getParent());
+//			log.info(input.getParent().getParent());
+//			log.info(evt.getActionCommand());
+			String msg = String.format("%s %s: %s", getTimeString(when), nick, text);
+//			log.info(msg);
+			window.appendLine(channel, msg);
+			if (text.startsWith("/"))
+			{
+				irc.postMessage(text.substring(1));
+			}
+			else if (isHost(channel))
+			{
+				irc.postMessage(text);
+			}
+			else
+			{
+				irc.privmsg(channel, text);
+			}
+		}
+		catch (RuntimeException x)
+		{
+			log.error("テキスト送信を中止しました。", x);
+		}
+	}
 
 	@Override
 	public void onStart()
