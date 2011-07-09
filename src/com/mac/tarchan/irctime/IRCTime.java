@@ -4,6 +4,7 @@
 package com.mac.tarchan.irctime;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -20,6 +21,7 @@ import com.mac.tarchan.irc.client.IRCEvent;
 import com.mac.tarchan.irc.client.IRCMessage;
 import com.mac.tarchan.irc.client.IRCPrefix;
 import com.mac.tarchan.irc.client.util.BotAdapter;
+import com.mac.tarchan.irc.client.util.DccSendFile;
 
 /**
  * IRCTime
@@ -201,6 +203,9 @@ public class IRCTime extends BotAdapter
 	public void onNick(String oldNick, String newNick, long when)
 	{
 		String nowNick = irc.getUserNick();
+		log.debug("oldNick=" + oldNick);
+		log.debug("newNick=" + newNick);
+		log.debug("nowNick=" + nowNick);
 		String text = String.format("%s %s -> %s (%s)", getTimeString(when), oldNick, newNick, nowNick);
 		log.info(text);
 		window.appendLineForNick(oldNick, text);
@@ -262,6 +267,22 @@ public class IRCTime extends BotAdapter
 		String msg = message.getTrail();
 		String text = String.format("%s %s: %s", getTimeString(when), nick, msg);
 		window.appendLine(nick, text);
+	}
+
+	@Override
+	public void onDccSend(String trail, IRCPrefix prefix)
+	{
+		try
+		{
+			// TODO DCC SEND
+			DccSendFile dccfile = new DccSendFile(trail);
+			File savefile = new File("dcc/" + prefix.getNick(), dccfile.getName());
+			dccfile.save(savefile);
+		}
+		catch (IOException x)
+		{
+			log.error(x);
+		}
 	}
 
 	@Override

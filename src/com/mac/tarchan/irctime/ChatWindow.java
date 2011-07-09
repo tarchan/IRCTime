@@ -150,9 +150,14 @@ public class ChatWindow extends JFrame
 		}
 		else
 		{
-			ChatPanel tab = (ChatPanel)tabPanel.getComponentAt(index);
-			return tab;
+			return getTab(index);
 		}
+	}
+
+	public ChatPanel getTab(int index)
+	{
+		ChatPanel tab = (ChatPanel)tabPanel.getComponentAt(index);
+		return tab;
 	}
 
 	public void setApp(IRCTime app)
@@ -177,12 +182,18 @@ public class ChatWindow extends JFrame
 		int count = tabPanel.getTabCount();
 		for (int i = 0; i < count; i++)
 		{
-			ChatPanel tab = (ChatPanel)tabPanel.getTabComponentAt(i);
+			ChatPanel tab = getTab(i);
+			if (tab == null)
+			{
+				log.error("タブが見つかりません。: " + i);
+				continue;
+			}
 			if (tab.containsNick(nick))
 			{
 				tab.appendLine(text);
 			}
 		}
+		log.warn(String.format("%s を含むタブが見つかりません。(%s)", nick, count));
 	}
 
 	void setNames(String name, String[] names)

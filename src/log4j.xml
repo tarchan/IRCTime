@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-
 	<!-- コンソール出力 -->
 	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
 		<param name="encoding" value="utf-8" />
@@ -9,7 +8,6 @@
 			<param name="conversionPattern" value="%d [%-5p] %c{1}.%M - %m%n" />
 		</layout>
 	</appender>
-
 	<!-- ファイル出力 -->
 	<appender name="LOGFILE" class="org.apache.log4j.RollingFileAppender">
 		<param name="append" value="true" />
@@ -21,7 +19,6 @@
 			<param name="conversionPattern" value="%d{yyyy/MM/dd HH:mm:ss} [%-5p] %c{1}.%M - %m%n" />
 		</layout>
 	</appender>
-
 	<!-- イベントログ出力 -->
 	<appender name="EVENTLOG" class="org.apache.log4j.nt.NTEventLogAppender">
 		<param name="source" value="IRCTime" />
@@ -32,14 +29,12 @@
 			<param name="levelMin" value="INFO" />
 		</filter>
 	</appender>
-
 	<!-- ログレベル -->
-	<logger name="com.mac.tarchan.irc">
-		<level value ="DEBUG" />
+	<logger name="com.mac.tarchan.desktop">
+		<level value ="INFO" />
 	</logger>
 	<root>
 		<level value="DEBUG" />
 		<appender-ref ref="CONSOLE" />
 	</root>
-
 </log4j:configuration>
