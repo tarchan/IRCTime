@@ -185,8 +185,7 @@ public class ChatWindow extends JFrame
 			ChatPanel tab = getTab(i);
 			if (tab == null)
 			{
-				log.error("タブが見つかりません。: " + i);
-				continue;
+				throw new RuntimeException("タブが見つかりません。: " + i);
 			}
 			if (tab.containsNick(nick))
 			{
@@ -194,6 +193,8 @@ public class ChatWindow extends JFrame
 			}
 		}
 		log.warn(String.format("%s を含むタブが見つかりません。(%s)", nick, count));
+		ChatPanel tab = getTab(0);
+		tab.appendLine(text);
 	}
 
 	void setNames(String name, String[] names)

@@ -16,8 +16,6 @@ import org.apache.commons.logging.LogFactory;
 
 import com.mac.tarchan.desktop.DesktopSupport;
 import com.mac.tarchan.desktop.SexyControl;
-import com.mac.tarchan.irc.client.IRCClient;
-import com.mac.tarchan.irc.client.IRCEvent;
 import com.mac.tarchan.irc.client.IRCMessage;
 import com.mac.tarchan.irc.client.IRCPrefix;
 import com.mac.tarchan.irc.client.util.BotAdapter;
@@ -288,8 +286,19 @@ public class IRCTime extends BotAdapter
 	@Override
 	public void onNotice(IRCMessage message)
 	{
-		// TODO 自動生成されたメソッド・スタブ
-		super.onNotice(message);
+		long when = message.getWhen();
+		String nick = message.getPrefix().getNick();
+		String msg = message.getTrail();
+		String text;
+		if (nick != null)
+		{
+			text = String.format("%s %s: %s", getTimeString(when), nick, msg);
+		}
+		else
+		{
+			text = String.format("%s %s", getTimeString(when), msg);
+		}
+		window.appendLineForNick(nick, text);
 	}
 
 	@Override
@@ -306,83 +315,6 @@ public class IRCTime extends BotAdapter
 	@Override
 	public void onError(String text)
 	{
-		// TODO 自動生成されたメソッド・スタブ
-		super.onError(text);
-	}
-
-	public void _onMessage(IRCEvent event)
-	{
-		IRCMessage message = event.getMessage();
-//		System.out.println("メッセージ: " + message);
-//		message.getServer().send("me, too.");
-		IRCClient irc = event.getClient();
-//		client.postMessage("privmsg", "me, too.");
-
-		String command = message.getCommand();
-		if (command.equals("PRIVMSG"))
-		{
-			// privmsg
-			long when = message.getWhen();
-			String nick = message.getPrefix().getNick();
-			String chan = message.getParam(0);
-			String msg = message.getTrail();
-//			String text = String.format("%s:%s> %s", chan, nick, msg);
-//			ChatPanel panel = currentTab();
-//			panel.appendLine(text);
-			String text = String.format("%tH:%<tM %s: %s", when, nick, msg);
-			window.appendLine(chan, text);
-//			if (!chan.equals(irc.getNick()))
-//			{
-//				irc.privmsg(chan, msg);
-//			}
-//			else
-//			{
-//				irc.privmsg(nick, msg);
-//			}
-		}
-		else if (command.equals("NICK"))
-		{
-			String nowNick = irc.getUserNick();
-			String oldNick = message.getPrefix().getNick();
-			String newNick = message.getTrail();
-			log.debug(String.format("%s -> %s (%s)", oldNick, newNick, nowNick));
-//			String text = String.format("%s -> %s (%s)", oldNick, newNick, nowNick);
-		}
-		else if (command.equals("JOIN"))
-		{
-			String nick = message.getPrefix().getNick();
-			String chan = message.getTrail();
-			String text = String.format("join %s", nick);
-			window.appendLine(chan, text);
-		}
-		else if (command.equals("332"))
-		{
-			String chan = message.getParam(1);
-			String text = message.getTrail();
-			window.setTopic(chan, text);
-		}
-		else if (command.equals("PING"))
-		{
-			// ping
-			String payload = message.getTrail();
-			irc.pong(payload);
-		}
-		else if (command.equals("ERROR"))
-		{
-			// error
-		}
-		else if (command.equals("001"))
-		{
-			// welcome
-//			join(irc);
-		}
-		else
-		{
-			String host = irc.getHost();
-			String text = message.toString();
-			window.appendLine(host, text);
-//			ChatPanel panel = window.currentTab();
-//			panel.appendLine(text);
-		}
+		log.error(text);
 	}
 }
