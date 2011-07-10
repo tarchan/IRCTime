@@ -143,7 +143,8 @@ public class IRCTime extends BotAdapter
 
 			long when = evt.getWhen();
 			JTextComponent input = (JTextComponent)evt.getSource();
-			ChatPanel panel = (ChatPanel)input.getParent().getParent();
+//			ChatPanel panel = (ChatPanel)input.getParent().getParent();
+			ChatPanel panel = DesktopSupport.componentOwner(input, ChatPanel.class);
 			String channel = panel.getName();
 			String nick = irc.getUserNick();
 //			log.info(input.getParent());
