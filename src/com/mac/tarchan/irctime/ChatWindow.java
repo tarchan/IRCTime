@@ -211,4 +211,25 @@ public class ChatWindow extends JFrame
 		ChatPanel tab = getTab(name);
 		tab.setTopic(text);
 	}
+
+	public void updateNick(String oldNick, String newNick)
+	{
+		// TODO ニックネームの変更に追従
+	}
+
+	public void addNick(String channel, String nick)
+	{
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+	public void deleteNick(String channel, String nick)
+	{
+		// TODO ニックネームの削除に追従
+	}
+
+	public void deleteNick(String nick)
+	{
+		// TODO ニックネームの削除に追従
+	}
 }

@@ -33,7 +33,9 @@ public class IRCTime extends BotAdapter
 	private ChatWindow window;
 
 	/**
-	 * @param args
+	 * IRCTime
+	 * 
+	 * @param args なし
 	 */
 	public static void main(final String[] args)
 	{
@@ -199,8 +201,10 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onNick(String oldNick, String newNick, long when)
+	public void onNick(IRCPrefix prefix, String newNick)
 	{
+		long when = prefix.getWhen();
+		String oldNick = prefix.getNick();
 		String nowNick = irc.getUserNick();
 		log.debug("oldNick=" + oldNick);
 		log.debug("newNick=" + newNick);
@@ -208,35 +212,37 @@ public class IRCTime extends BotAdapter
 		String text = String.format("%s %s -> %s (%s)", getTimeString(when), oldNick, newNick, nowNick);
 		log.info(text);
 		window.appendLineForNick(oldNick, text);
-		// TODO ニックネームの変更に追従
+		window.updateNick(oldNick, newNick);
 	}
 
 	@Override
-	public void onJoin(String channel, IRCPrefix prefix)
+	public void onJoin(IRCPrefix prefix, String channel)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
 		String text = String.format("%s %s has joined (%s)", getTimeString(when), nick, prefix);
 		window.appendLine(channel, text);
+		window.addNick(channel, nick);
 	}
 
 	@Override
-	public void onPart(String channel, IRCPrefix prefix)
+	public void onPart(IRCPrefix prefix, String channel)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
 		String text = String.format("%s %s has left %s (%s)", getTimeString(when), nick, channel, prefix);
 		window.appendLine(channel, text);
+		window.deleteNick(channel, nick);
 	}
 
 	@Override
-	public void onQuit(String trail, IRCPrefix prefix)
+	public void onQuit(IRCPrefix prefix, String text)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
-		String text = String.format("%s %s has left IRC (%s)", getTimeString(when), nick, trail);
-		window.appendLineForNick(nick, text);
-		// TODO ニックネームの削除に追従
+		String line = String.format("%s %s has left IRC (%s)", getTimeString(when), nick, text);
+		window.appendLineForNick(nick, line);
+		window.deleteNick(nick);
 	}
 
 	@Override
@@ -247,25 +253,39 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onMessage(IRCMessage message)
+	public void onMessage(IRCPrefix prefix, String channel, String text)
 	{
-		long when = message.getWhen();
-		String nick = message.getPrefix().getNick();
-		String chan = message.getParam0();
-		String msg = message.getTrail();
-		String text = String.format("%s %s: %s", getTimeString(when), nick, msg);
-		window.appendLine(chan, text);
+		long when = prefix.getWhen();
+		String nick = prefix.getNick();
+		String line = String.format("%s %s: %s", getTimeString(when), nick, text);
+		window.appendLine(channel, line);
 	}
 
 	@Override
-	public void onDirectMessage(IRCMessage message)
+	public void onNotice(IRCPrefix prefix, String channel, String text)
 	{
-		long when = message.getWhen();
-		String nick = message.getPrefix().getNick();
-//		String chan = message.getParam0();
-		String msg = message.getTrail();
-		String text = String.format("%s %s: %s", getTimeString(when), nick, msg);
-		window.appendLine(nick, text);
+		long when = prefix.getWhen();
+		String nick = prefix.getNick();
+		String line;
+		if (nick != null)
+		{
+			line = String.format("%s %s: %s", getTimeString(when), nick, text);
+		}
+		else
+		{
+			line = String.format("%s %s", getTimeString(when), text);
+		}
+		window.appendLineForNick(nick, line);
+//		window.appendLine(channel, line);
+	}
+
+	@Override
+	public void onDirectMessage(IRCPrefix prefix, String target, String text)
+	{
+		long when = prefix.getWhen();
+		String nick = prefix.getNick();
+		String line = String.format("%s %s: %s", getTimeString(when), nick, text);
+		window.appendLine(nick, line);
 	}
 
 	@Override
@@ -282,24 +302,6 @@ public class IRCTime extends BotAdapter
 		{
 			log.error(x);
 		}
-	}
-
-	@Override
-	public void onNotice(IRCMessage message)
-	{
-		long when = message.getWhen();
-		String nick = message.getPrefix().getNick();
-		String msg = message.getTrail();
-		String text;
-		if (nick != null)
-		{
-			text = String.format("%s %s: %s", getTimeString(when), nick, msg);
-		}
-		else
-		{
-			text = String.format("%s %s", getTimeString(when), msg);
-		}
-		window.appendLineForNick(nick, text);
 	}
 
 	@Override

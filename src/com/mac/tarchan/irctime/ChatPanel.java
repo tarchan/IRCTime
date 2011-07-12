@@ -89,6 +89,7 @@ public class ChatPanel extends JPanel
 	/**
 	 * @see #inputMessage()
 	 */
+	@SuppressWarnings("javadoc")
 	public void sendButton()
 	{
 		log.debug("sendButton");
