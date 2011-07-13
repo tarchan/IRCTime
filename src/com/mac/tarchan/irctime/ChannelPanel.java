@@ -25,9 +25,9 @@ import com.mac.tarchan.desktop.event.EventQuery;
  * ChatPanel
  */
 @SuppressWarnings("serial")
-public class ChatPanel extends JPanel
+public class ChannelPanel extends JPanel
 {
-	private static final Log log = LogFactory.getLog(ChatPanel.class);
+	private static final Log log = LogFactory.getLog(ChannelPanel.class);
 
 	private DefaultListModel nameModel = new DefaultListModel();
 
@@ -43,7 +43,7 @@ public class ChatPanel extends JPanel
 
 	private JLabel topicLabel = new JLabel();
 
-	public ChatPanel()
+	public ChannelPanel()
 	{
 		createMain(this);
 
@@ -113,9 +113,9 @@ public class ChatPanel extends JPanel
 	public void setNames(String[] names)
 	{
 		nameModel.clear();
-		for (String name : names)
+		for (String nick : names)
 		{
-			nameModel.addElement(name);
+			nameModel.addElement(new ChannelMember(nick));
 		}
 		log.debug(nameList.getParent().getParent());
 		nameList.getParent().getParent().setVisible(true);
@@ -136,6 +136,28 @@ public class ChatPanel extends JPanel
 
 	public boolean containsNick(String nick)
 	{
-		return nameModel.contains(nick);
+		if (nick == null) return false;
+		return nameModel.contains(new ChannelMember(nick));
+	}
+
+	public void addNick(String nick)
+	{
+		if (nick == null) return;
+		nameModel.addElement(new ChannelMember(nick));
+	}
+
+	public void deleteNick(String nick)
+	{
+		if (nick == null) return;
+		nameModel.removeElement(new ChannelMember(nick));
+	}
+
+	public void updateNick(String oldNick, String newNick)
+	{
+		if (oldNick == null || newNick == null) return;
+		int index = nameModel.indexOf(new ChannelMember(oldNick));
+		ChannelMember member = ChannelMember.class.cast(nameModel.elementAt(index));
+		member.setNick(newNick);
+		nameModel.setElementAt(member, index);
 	}
 }

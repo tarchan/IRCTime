@@ -4,6 +4,8 @@
 package com.mac.tarchan.irctime;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
@@ -134,12 +136,12 @@ public class ChatWindow extends JFrame
 		return menuBar;
 	}
 
-	public ChatPanel getTab(String name)
+	public ChannelPanel getTab(String name)
 	{
 		int index = tabPanel.indexOfTab(name);
 		if (index < 0)
 		{
-			ChatPanel tab = new ChatPanel();
+			ChannelPanel tab = new ChannelPanel();
 			tab.setName(name);
 //			tab.setTopic(name);
 			tabPanel.addTab(name, tab);
@@ -154,9 +156,9 @@ public class ChatWindow extends JFrame
 		}
 	}
 
-	public ChatPanel getTab(int index)
+	public ChannelPanel getTab(int index)
 	{
-		ChatPanel tab = (ChatPanel)tabPanel.getComponentAt(index);
+		ChannelPanel tab = (ChannelPanel)tabPanel.getComponentAt(index);
 		return tab;
 	}
 
@@ -173,63 +175,91 @@ public class ChatWindow extends JFrame
 
 	void appendLine(String name, String text)
 	{
-		ChatPanel tab = getTab(name);
+		ChannelPanel tab = getTab(name);
 		tab.appendLine(text);
+	}
+
+	List<ChannelPanel> findPanel(String nick)
+	{
+		List<ChannelPanel> list = new ArrayList<ChannelPanel>();
+		int count = tabPanel.getTabCount();
+		for (int i = 0; i < count; i++)
+		{
+			ChannelPanel tab = getTab(i);
+			if (tab == null) throw new RuntimeException("タブが見つかりません。: " + i);
+			if (tab.containsNick(nick)) list.add(tab);
+		}
+		if (list.size() == 0) log.warn(String.format("%s を含むタブが見つかりません。(%s)", nick, count));
+
+		return list;
 	}
 
 	void appendLineForNick(String nick, String text)
 	{
-		int count = tabPanel.getTabCount();
-		for (int i = 0; i < count; i++)
+		List<ChannelPanel> list = findPanel(nick);
+		if (list.size() > 0)
 		{
-			ChatPanel tab = getTab(i);
-			if (tab == null)
-			{
-				throw new RuntimeException("タブが見つかりません。: " + i);
-			}
-			if (tab.containsNick(nick))
+			for (ChannelPanel tab : list)
 			{
 				tab.appendLine(text);
 			}
 		}
-		log.warn(String.format("%s を含むタブが見つかりません。(%s)", nick, count));
-		ChatPanel tab = getTab(0);
-		tab.appendLine(text);
-	}
-
-	void setNames(String name, String[] names)
-	{
-		if (name == null) throw new RuntimeException("チャンネル名が見つかりません。");
-		if (names == null) throw new RuntimeException("リストが見つかりません。");
-		ChatPanel tab = getTab(name);
-		if (tab == null) throw new RuntimeException("タブが見つかりません。");
-		tab.setNames(names);
+		else
+		{
+			ChannelPanel tab = getTab(0);
+			tab.appendLine(text);
+		}
 	}
 
 	void setTopic(String name, String text)
 	{
-		ChatPanel tab = getTab(name);
+		ChannelPanel tab = getTab(name);
 		tab.setTopic(text);
+	}
+
+	void setNames(String channel, String[] names)
+	{
+		if (channel == null) throw new RuntimeException("チャンネル名が見つかりません。");
+		if (names == null) throw new RuntimeException("リストが見つかりません。");
+		ChannelPanel tab = getTab(channel);
+		if (tab == null) throw new RuntimeException("タブが見つかりません。");
+		tab.setNames(names);
 	}
 
 	public void updateNick(String oldNick, String newNick)
 	{
-		// TODO ニックネームの変更に追従
+		List<ChannelPanel> list = findPanel(oldNick);
+		if (list.size() > 0)
+		{
+			for (ChannelPanel tab : list)
+			{
+				tab.updateNick(oldNick, newNick);
+			}
+		}
 	}
 
 	public void addNick(String channel, String nick)
 	{
-		// TODO 自動生成されたメソッド・スタブ
-		
+		ChannelPanel tab = getTab(channel);
+		if (tab == null) throw new RuntimeException("タブが見つかりません。");
+		tab.addNick(nick);
 	}
 
 	public void deleteNick(String channel, String nick)
 	{
-		// TODO ニックネームの削除に追従
+		ChannelPanel tab = getTab(channel);
+		if (tab == null) throw new RuntimeException("タブが見つかりません。");
+		tab.deleteNick(nick);
 	}
 
 	public void deleteNick(String nick)
 	{
-		// TODO ニックネームの削除に追従
+		int count = tabPanel.getTabCount();
+		for (int i = 0; i < count; i++)
+		{
+			ChannelPanel tab = getTab(i);
+			if (tab == null) throw new RuntimeException("タブが見つかりません。: " + i);
+			if (tab.containsNick(nick)) tab.deleteNick(nick);
+		}
 	}
 }

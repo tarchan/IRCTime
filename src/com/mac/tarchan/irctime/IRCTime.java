@@ -146,7 +146,7 @@ public class IRCTime extends BotAdapter
 			long when = evt.getWhen();
 			JTextComponent input = (JTextComponent)evt.getSource();
 //			ChatPanel panel = (ChatPanel)input.getParent().getParent();
-			ChatPanel panel = DesktopSupport.componentOwner(input, ChatPanel.class);
+			ChannelPanel panel = DesktopSupport.componentOwner(input, ChannelPanel.class);
 			String channel = panel.getName();
 			String nick = irc.getUserNick();
 //			log.info(input.getParent());
@@ -226,12 +226,12 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onPart(IRCPrefix prefix, String channel)
+	public void onPart(IRCPrefix prefix, String channel, String text)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
-		String text = String.format("%s %s has left %s (%s)", getTimeString(when), nick, channel, prefix);
-		window.appendLine(channel, text);
+		String line = String.format("%s %s has left %s (%s)", getTimeString(when), nick, channel, prefix);
+		window.appendLine(channel, line);
 		window.deleteNick(channel, nick);
 	}
 
