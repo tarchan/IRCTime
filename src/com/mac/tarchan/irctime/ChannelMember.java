@@ -19,15 +19,15 @@ public class ChannelMember
 {
 	private static final Log log = LogFactory.getLog(ChannelMember.class);
 
-	String id;
+	protected String id;
 
-	String nick;
+	protected String nick;
 
-	String o = "";
+	protected boolean op;
 
-	String v = "";
+	protected boolean voice;
 
-	String displayNick;
+	protected String displayNick;
 
 	public ChannelMember(String nick)
 	{
@@ -44,25 +44,41 @@ public class ChannelMember
 		if (nick.startsWith("@"))
 		{
 			this.nick = nick.substring(1);
-			o = "@";
+			op = true;
 		}
 		else if (nick.startsWith("+"))
 		{
 			this.nick = nick.substring(1);
-			v = "+";
+			voice = true;
 		}
 		else
 		{
 			this.nick = nick;
 		}
 		this.id = this.nick.toUpperCase();
-		this.displayNick = this.o + this.nick;
+		updateDisplayNick();
+	}
+
+	public void setMode(String mode)
+	{
+		if (mode.equals("+o")) op = true;
+		else if (mode.equals("-o")) op = false;
+		else if (mode.equals("+v")) voice = true;
+		else if (mode.equals("-v")) voice = false;
+		updateDisplayNick();
+	}
+
+	void updateDisplayNick()
+	{
+		if (op) displayNick = "@" + nick;
+		else if (voice) displayNick = "+" + nick;
+		else displayNick = nick;
 	}
 
 	@Override
 	public int hashCode()
 	{
-		log.debug(toString() + "=" + id.hashCode());
+		if (log.isTraceEnabled()) log.trace(toString() + "=" + id.hashCode());
 		return id.hashCode();
 	}
 
@@ -71,7 +87,7 @@ public class ChannelMember
 	{
 		if (!ChannelMember.class.isInstance(paramObject)) return false;
 		ChannelMember a = ChannelMember.class.cast(paramObject);
-		log.debug(id + "=" + a.id + "," + id.equals(a.id));
+		if (log.isTraceEnabled()) log.trace(id + "=" + a.id + "," + id.equals(a.id));
 		return id.equals(a.id);
 	}
 

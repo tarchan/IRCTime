@@ -19,6 +19,7 @@ import javax.swing.JTextPane;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.mac.tarchan.desktop.DesktopSupport;
 import com.mac.tarchan.desktop.event.EventQuery;
 
 /**
@@ -105,6 +106,11 @@ public class ChannelPanel extends JPanel
 //		appendLine(text);
 	}
 
+	void updateTopic()
+	{
+		topicLabel.setText(String.format("%s (%,d)", topicText, nameModel.size()));
+	}
+
 	public void appendLine(String text)
 	{
 		mainText.setText(String.format("%s%s%n", mainText.getText(), text));
@@ -117,9 +123,9 @@ public class ChannelPanel extends JPanel
 		{
 			nameModel.addElement(new ChannelMember(nick));
 		}
-		log.debug(nameList.getParent().getParent());
-		nameList.getParent().getParent().setVisible(true);
-//		revalidate();
+		JScrollPane view = DesktopSupport.componentOwner(nameList, JScrollPane.class);
+		log.debug(view);
+		view.setVisible(true);
 		updateTopic();
 	}
 
@@ -127,11 +133,6 @@ public class ChannelPanel extends JPanel
 	{
 		topicText = text;
 		updateTopic();
-	}
-
-	protected void updateTopic()
-	{
-		topicLabel.setText(String.format("%s (%,d)", topicText, nameModel.size()));
 	}
 
 	public boolean containsNick(String nick)
@@ -144,12 +145,14 @@ public class ChannelPanel extends JPanel
 	{
 		if (nick == null) return;
 		nameModel.addElement(new ChannelMember(nick));
+		updateTopic();
 	}
 
 	public void deleteNick(String nick)
 	{
 		if (nick == null) return;
 		nameModel.removeElement(new ChannelMember(nick));
+		updateTopic();
 	}
 
 	public void updateNick(String oldNick, String newNick)
@@ -158,6 +161,14 @@ public class ChannelPanel extends JPanel
 		int index = nameModel.indexOf(new ChannelMember(oldNick));
 		ChannelMember member = ChannelMember.class.cast(nameModel.elementAt(index));
 		member.setNick(newNick);
+		nameModel.setElementAt(member, index);
+	}
+
+	public void updateMode(String nick, String mode)
+	{
+		int index = nameModel.indexOf(new ChannelMember(nick));
+		ChannelMember member = ChannelMember.class.cast(nameModel.elementAt(index));
+		member.setMode(mode);
 		nameModel.setElementAt(member, index);
 	}
 }

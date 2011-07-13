@@ -196,8 +196,8 @@ public class IRCTime extends BotAdapter
 	public void onNames(String channel, String[] names, long when)
 	{
 		window.setNames(channel, names);
-		String text = String.format("%s %s names is set (%s)", getTimeString(when), channel, names.length);
-		window.appendLine(channel, text);
+		String line = String.format("%s %s names is set (%s)", getTimeString(when), channel, names.length);
+		window.appendLine(channel, line);
 	}
 
 	@Override
@@ -209,9 +209,9 @@ public class IRCTime extends BotAdapter
 		log.debug("oldNick=" + oldNick);
 		log.debug("newNick=" + newNick);
 		log.debug("nowNick=" + nowNick);
-		String text = String.format("%s %s -> %s (%s)", getTimeString(when), oldNick, newNick, nowNick);
-		log.info(text);
-		window.appendLineForNick(oldNick, text);
+		String line = String.format("%s %s -> %s (%s)", getTimeString(when), oldNick, newNick, nowNick);
+		log.info(line);
+		window.appendLineForNick(oldNick, line);
 		window.updateNick(oldNick, newNick);
 	}
 
@@ -220,8 +220,8 @@ public class IRCTime extends BotAdapter
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
-		String text = String.format("%s %s has joined (%s)", getTimeString(when), nick, prefix);
-		window.appendLine(channel, text);
+		String line = String.format("%s %s has joined (%s)", getTimeString(when), nick, prefix);
+		window.appendLine(channel, line);
 		window.addNick(channel, nick);
 	}
 
@@ -246,10 +246,11 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onChannelMode(String channel, String mode)
+	public void onMode(IRCPrefix prefix, String channel, String mode, String nick)
 	{
-		String text = String.format("%s has changed mode %s", channel, mode);
-		window.appendLine(channel, text);
+		String line = String.format("%s has changed mode %s", channel, mode);
+		window.appendLine(channel, line);
+		window.updateMode(channel, mode, nick);
 	}
 
 	@Override

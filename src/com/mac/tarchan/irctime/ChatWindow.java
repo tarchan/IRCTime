@@ -262,4 +262,11 @@ public class ChatWindow extends JFrame
 			if (tab.containsNick(nick)) tab.deleteNick(nick);
 		}
 	}
+
+	public void updateMode(String channel, String mode, String nick)
+	{
+		ChannelPanel tab = getTab(channel);
+		if (tab == null) throw new RuntimeException("タブが見つかりません。");
+		tab.updateMode(nick, mode);
+	}
 }
