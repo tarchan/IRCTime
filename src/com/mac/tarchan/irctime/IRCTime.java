@@ -209,7 +209,7 @@ public class IRCTime extends BotAdapter
 		log.debug("oldNick=" + oldNick);
 		log.debug("newNick=" + newNick);
 		log.debug("nowNick=" + nowNick);
-		String line = String.format("%s %s -> %s (%s)", getTimeString(when), oldNick, newNick, nowNick);
+		String line = String.format("%s %s -> %s (%s)", getTimeString(when), oldNick, newNick, prefix);
 		log.info(line);
 		window.appendLineForNick(oldNick, line);
 		window.updateNick(oldNick, newNick);

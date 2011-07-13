@@ -124,7 +124,7 @@ public class ChannelPanel extends JPanel
 			nameModel.addElement(new ChannelMember(nick));
 		}
 		JScrollPane view = DesktopSupport.componentOwner(nameList, JScrollPane.class);
-		log.debug(view);
+//		log.debug(view);
 		view.setVisible(true);
 		updateTopic();
 	}
