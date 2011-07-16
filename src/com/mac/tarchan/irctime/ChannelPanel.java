@@ -90,7 +90,6 @@ public class ChannelPanel extends JPanel
 	/**
 	 * @see #inputMessage()
 	 */
-	@SuppressWarnings("javadoc")
 	public void sendButton()
 	{
 		log.debug("sendButton");

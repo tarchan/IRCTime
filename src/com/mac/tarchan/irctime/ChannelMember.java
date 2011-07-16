@@ -10,8 +10,6 @@ package com.mac.tarchan.irctime;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.mac.tarchan.irc.client.IRCPrefix;
-
 /**
  * ChannelMember
  */
@@ -32,11 +30,6 @@ public class ChannelMember
 	public ChannelMember(String nick)
 	{
 		setNick(nick);
-	}
-
-	public ChannelMember(IRCPrefix prefix)
-	{
-		this(prefix.getNick());
 	}
 
 	public void setNick(String nick)

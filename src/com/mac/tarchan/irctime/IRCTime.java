@@ -16,8 +16,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.mac.tarchan.desktop.DesktopSupport;
 import com.mac.tarchan.desktop.SexyControl;
-import com.mac.tarchan.irc.client.IRCMessage;
-import com.mac.tarchan.irc.client.IRCPrefix;
+import com.mac.tarchan.irc.client.IRCMessage.CTCP;
+import com.mac.tarchan.irc.client.IRCMessage.Prefix;
 import com.mac.tarchan.irc.client.util.BotAdapter;
 import com.mac.tarchan.irc.client.util.DccSendFile;
 
@@ -185,23 +185,25 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onTopic(String channel, String topic, long when)
+	public void onTopic(Prefix prefix, String channel, String topic)
 	{
+		long when = prefix.getWhen();
 		window.setTopic(channel, topic);
 		String text = String.format("%s %s topic is set (%s)", getTimeString(when), channel, topic);
 		window.appendLine(channel, text);
 	}
 
 	@Override
-	public void onNames(String channel, String[] names, long when)
+	public void onNames(Prefix prefix, String channel, String[] names)
 	{
+		long when = prefix.getWhen();
 		window.setNames(channel, names);
 		String line = String.format("%s %s names is set (%s)", getTimeString(when), channel, names.length);
 		window.appendLine(channel, line);
 	}
 
 	@Override
-	public void onNick(IRCPrefix prefix, String newNick)
+	public void onNick(Prefix prefix, String newNick)
 	{
 		long when = prefix.getWhen();
 		String oldNick = prefix.getNick();
@@ -216,7 +218,7 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onJoin(IRCPrefix prefix, String channel)
+	public void onJoin(Prefix prefix, String channel)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
@@ -226,7 +228,7 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onPart(IRCPrefix prefix, String channel, String text)
+	public void onPart(Prefix prefix, String channel, String text)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
@@ -236,7 +238,7 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onQuit(IRCPrefix prefix, String text)
+	public void onQuit(Prefix prefix, String text)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
@@ -246,7 +248,7 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onMode(IRCPrefix prefix, String channel, String mode, String nick)
+	public void onMode(Prefix prefix, String channel, String mode, String nick)
 	{
 		String line = String.format("%s has changed mode %s", channel, mode);
 		window.appendLine(channel, line);
@@ -254,7 +256,7 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onMessage(IRCPrefix prefix, String channel, String text)
+	public void onMessage(Prefix prefix, String channel, String text)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
@@ -263,7 +265,7 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onNotice(IRCPrefix prefix, String channel, String text)
+	public void onNotice(Prefix prefix, String channel, String text)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
@@ -281,7 +283,7 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onDirectMessage(IRCPrefix prefix, String target, String text)
+	public void onDirectMessage(Prefix prefix, String target, String text)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
@@ -290,35 +292,34 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onDccSend(String trail, IRCPrefix prefix)
+	public void onDccSend(Prefix prefix, String target, CTCP ctcp)
 	{
 		try
 		{
-			// TODO DCC SEND
-			DccSendFile dccfile = new DccSendFile(trail);
+			DccSendFile dccfile = new DccSendFile(ctcp.toString());
 			File savefile = new File("dcc/" + prefix.getNick(), dccfile.getName());
 			dccfile.save(savefile);
 		}
 		catch (IOException x)
 		{
-			log.error(x);
+			log.error("DCC SENDのファイル受信に失敗しました。: " + target, x);
 		}
 	}
 
 	@Override
-	public void onNumericReply(IRCMessage message)
+	public void onNumericReply(int number, String text)
 	{
-		String numeric = message.getCommand();
-		long when = message.getWhen();
-		String host = message.getPrefix().getNick();
-		String msg = message.getTrail();
-		String text = String.format("%tH:%<tM (%s) %s", when, numeric, msg);
-		window.appendLine(host, text);
+		long when = System.currentTimeMillis();
+		String line = String.format("%s (%03d) %s", getTimeString(when), number, text);
+		window.appendLine(irc.getHost(), line);
 	}
 
 	@Override
 	public void onError(String text)
 	{
-		log.error(text);
+//		log.error(text);
+		long when = System.currentTimeMillis();
+		String line = String.format("%s (%s) %s", getTimeString(when), "ERROR", text);
+		window.appendLine(irc.getHost(), line);
 	}
 }
