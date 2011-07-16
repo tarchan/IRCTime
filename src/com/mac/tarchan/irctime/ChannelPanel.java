@@ -150,24 +150,39 @@ public class ChannelPanel extends JPanel
 	public void deleteNick(String nick)
 	{
 		if (nick == null) return;
-		nameModel.removeElement(new ChannelMember(nick));
+		boolean removed = nameModel.removeElement(new ChannelMember(nick));
 		updateTopic();
+		if (!removed) throw new RuntimeException("削除するメンバーが見つかりません。: " + nick);
 	}
 
 	public void updateNick(String oldNick, String newNick)
 	{
 		if (oldNick == null || newNick == null) return;
 		int index = nameModel.indexOf(new ChannelMember(oldNick));
-		ChannelMember member = ChannelMember.class.cast(nameModel.elementAt(index));
-		member.setNick(newNick);
-		nameModel.setElementAt(member, index);
+		if (index >= 0)
+		{
+			ChannelMember member = ChannelMember.class.cast(nameModel.elementAt(index));
+			member.setNick(newNick);
+			nameModel.set(index, member);
+		}
+		else
+		{
+			throw new RuntimeException("更新するメンバーが見つかりません。: " + oldNick);
+		}
 	}
 
 	public void updateMode(String nick, String mode)
 	{
 		int index = nameModel.indexOf(new ChannelMember(nick));
-		ChannelMember member = ChannelMember.class.cast(nameModel.elementAt(index));
-		member.setMode(mode);
-		nameModel.setElementAt(member, index);
+		if (index >= 0)
+		{
+			ChannelMember member = ChannelMember.class.cast(nameModel.elementAt(index));
+			member.setMode(mode);
+			nameModel.set(index, member);
+		}
+		else
+		{
+			throw new RuntimeException("更新するメンバーが見つかりません。: " + nick);
+		}
 	}
 }
