@@ -3,6 +3,7 @@
  */
 package com.mac.tarchan.irctime;
 
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ public class ChatWindow extends JFrame
 
 	private OptionBox option;
 
+	private NickBox nickBox;
+
 	private IRCTime app;
 
 	public ChatWindow(String tile)
@@ -41,12 +44,13 @@ public class ChatWindow extends JFrame
 		tabPanel.setTabPlacement(JTabbedPane.BOTTOM);
 		add(tabPanel);
 		setJMenuBar(createMenuBar());
-		createDialog();
+		createDialog(this);
 	}
 
-	private void createDialog()
+	private void createDialog(Window owner)
 	{
-		option = new OptionBox(this);
+		option = new OptionBox(owner);
+		nickBox = new NickBox(owner);
 	}
 
 	private JMenuBar createMenuBar()
@@ -62,6 +66,19 @@ public class ChatWindow extends JFrame
 			public void actionPerformed(ActionEvent evt)
 			{
 				option.setVisible(true);
+			}
+		};
+		AbstractAction nickAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "ニックネームを変更...");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta N"));
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				nickBox.setVisible(true);
 			}
 		};
 
@@ -88,15 +105,15 @@ public class ChatWindow extends JFrame
 
 		JMenu chatMenu = new JMenu("チャット");
 		chatMenu.add(loginAction);
-		chatMenu.add("ニックネームを変更...");
+		chatMenu.add(nickAction);
 		chatMenu.add(awayMenu);
 		chatMenu.addSeparator();
-		chatMenu.add("情報を見る");
+		chatMenu.add("チャンネル情報を見る");
 		chatMenu.addSeparator();
 		chatMenu.add("チャットに参加...");
 //		chatMenu.add("チャットへの招待...");
 //		chatMenu.add("チャットを閉じる...");
-		chatMenu.add("メンバーを追加...");
+//		chatMenu.add("メンバーを追加...");
 		chatMenu.add("チャットを離脱...");
 		chatMenu.addSeparator();
 		chatMenu.add("メッセージを送信...");
@@ -107,6 +124,7 @@ public class ChatWindow extends JFrame
 		JMenu memberMenu = new JMenu("メンバー");
 		memberMenu.add("ダイレクトメッセージを送信...");
 		memberMenu.add("ファイルを送信...");
+		memberMenu.add("チャンネルへ招待...");
 		memberMenu.addSeparator();
 		memberMenu.add("メンバー情報を見る");
 		memberMenu.addSeparator();
@@ -115,7 +133,8 @@ public class ChatWindow extends JFrame
 		memberMenu.add("発言権を付ける");
 		memberMenu.add("発言権を外す");
 		memberMenu.addSeparator();
-		memberMenu.add("キック");
+		memberMenu.add("ブロック...");
+		memberMenu.add("キック...");
 
 		JMenu windowMenu = new JMenu("ウインドウ");
 		windowMenu.add("しまう");
@@ -138,7 +157,7 @@ public class ChatWindow extends JFrame
 
 	public ChannelPanel getTab(String name)
 	{
-		int index = tabPanel.indexOfTab(name);
+		int index = name != null ? tabPanel.indexOfTab(name) : 0;
 		if (index < 0)
 		{
 			ChannelPanel tab = new ChannelPanel();
@@ -146,7 +165,7 @@ public class ChatWindow extends JFrame
 //			tab.setTopic(name);
 			tabPanel.addTab(name, tab);
 
-			EventQuery.from(tab).find("inputText").click(app, "inputText", "");
+			EventQuery.from(tab).find("inputText").click(app, "sendText", "");
 
 			return tab;
 		}
@@ -165,6 +184,8 @@ public class ChatWindow extends JFrame
 	public void setApp(IRCTime app)
 	{
 		this.app = app;
+
+		EventQuery.from(nickBox).input().click(app, "sendNick", "");
 	}
 
 //	public ChatPanel currentTab()
@@ -179,25 +200,27 @@ public class ChatWindow extends JFrame
 		tab.appendLine(text);
 	}
 
-	List<ChannelPanel> findPanel(String nick)
+	ChannelPanel[] findPanel(String nick)
 	{
 		List<ChannelPanel> list = new ArrayList<ChannelPanel>();
-		int count = tabPanel.getTabCount();
-		for (int i = 0; i < count; i++)
+		if (nick != null)
 		{
-			ChannelPanel tab = getTab(i);
-			if (tab == null) throw new RuntimeException("タブが見つかりません。: " + i);
-			if (tab.containsNick(nick)) list.add(tab);
+			int count = tabPanel.getTabCount();
+			for (int i = 0; i < count; i++)
+			{
+				ChannelPanel tab = getTab(i);
+				if (tab == null) throw new RuntimeException("タブが見つかりません。: " + i);
+				if (tab.containsNick(nick)) list.add(tab);
+			}
+			if (list.size() == 0) log.warn(String.format("%s を含むタブが見つかりません。(%s)", nick, count));
 		}
-		if (list.size() == 0) log.warn(String.format("%s を含むタブが見つかりません。(%s)", nick, count));
-
-		return list;
+		return list.toArray(new ChannelPanel[]{});
 	}
 
 	void appendLineForNick(String nick, String text)
 	{
-		List<ChannelPanel> list = findPanel(nick);
-		if (list.size() > 0)
+		ChannelPanel[] list = findPanel(nick);
+		if (list.length > 0)
 		{
 			for (ChannelPanel tab : list)
 			{
@@ -228,8 +251,8 @@ public class ChatWindow extends JFrame
 
 	public void updateNick(String oldNick, String newNick)
 	{
-		List<ChannelPanel> list = findPanel(oldNick);
-		if (list.size() > 0)
+		ChannelPanel[] list = findPanel(oldNick);
+		if (list.length > 0)
 		{
 			for (ChannelPanel tab : list)
 			{

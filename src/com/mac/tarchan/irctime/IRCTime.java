@@ -3,6 +3,8 @@
  */
 package com.mac.tarchan.irctime;
 
+import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -135,11 +137,11 @@ public class IRCTime extends BotAdapter
 		return name != null && !name.startsWith("#") && name.contains(".");
 	}
 
-	public void inputText(ActionEvent evt)
+	public void sendText(ActionEvent evt)
 	{
 		try
 		{
-			log.debug(evt.getSource());
+//			log.debug(evt.getSource());
 			String text = evt.getActionCommand();
 			if (text.trim().length() == 0) return;
 
@@ -172,6 +174,20 @@ public class IRCTime extends BotAdapter
 		{
 			log.error("テキスト送信を中止しました。", x);
 		}
+	}
+
+	public void sendNick(ActionEvent evt)
+	{
+		String nick = evt.getActionCommand();
+//		log.info(nick);
+		if (nick.trim().length() > 0)
+		{
+			irc.nick(nick);
+		}
+
+		Component source = Component.class.cast(evt.getSource());
+		Dialog nickBox = DesktopSupport.componentOwner(source, Dialog.class);
+		nickBox.setVisible(false);
 	}
 
 	@Override
@@ -307,19 +323,36 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onNumericReply(int number, String text)
+	public void onNumericReply(Prefix prefix, int number, String text)
 	{
 		long when = System.currentTimeMillis();
 		String line = String.format("%s (%03d) %s", getTimeString(when), number, text);
-		window.appendLine(irc.getHost(), line);
+		window.appendLine(prefix.getNick(), line);
 	}
 
 	@Override
-	public void onError(String text)
+	public void onError(Prefix prefix, String text)
 	{
 //		log.error(text);
 		long when = System.currentTimeMillis();
 		String line = String.format("%s (%s) %s", getTimeString(when), "ERROR", text);
+		window.appendLine(prefix.getNick(), line);
+		super.onError(prefix, text);
+	}
+
+	@Override
+	public void onStop()
+	{
+		long when = System.currentTimeMillis();
+		String line = String.format("%s (%s) %s", getTimeString(when), "ERROR", "ネットワークが切断されました。");
 		window.appendLine(irc.getHost(), line);
+	}
+
+	@Override
+	public void onKilled(Prefix prefix, String text)
+	{
+		long when = System.currentTimeMillis();
+		String line = String.format("%s (%s) %s", getTimeString(when), "QUIT", "KILL されました。");
+		window.appendLine(prefix.getNick(), line);
 	}
 }
