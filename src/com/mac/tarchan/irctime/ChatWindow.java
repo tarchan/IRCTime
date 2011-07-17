@@ -20,7 +20,6 @@ import javax.swing.KeyStroke;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.mac.tarchan.desktop.OptionBox;
 import com.mac.tarchan.desktop.event.EventQuery;
 
 /**
@@ -33,9 +32,15 @@ public class ChatWindow extends JFrame
 
 	private JTabbedPane tabPanel = new JTabbedPane();
 
-	private OptionBox option;
+	private LoginBox loginBox;
 
 	private NickBox nickBox;
+
+	private JoinBox joinBox;
+
+	private PartBox partBox;
+
+	private TopicBox topicBox;
 
 	private IRCTime app;
 
@@ -51,8 +56,11 @@ public class ChatWindow extends JFrame
 
 	private void createDialog(Window owner)
 	{
-		option = new OptionBox(owner);
+		loginBox = new LoginBox(owner);
 		nickBox = new NickBox(owner);
+		joinBox = new JoinBox(owner);
+		partBox = new PartBox(owner);
+		topicBox = new TopicBox(owner);
 	}
 
 	private JMenuBar createMenuBar()
@@ -67,7 +75,7 @@ public class ChatWindow extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				option.setVisible(true);
+				loginBox.setVisible(true);
 			}
 		};
 		AbstractAction nickAction = new AbstractAction()
@@ -119,7 +127,7 @@ public class ChatWindow extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				// TODO TOPIC
+				topicBox.setVisible(true);
 			}
 		};
 		AbstractAction joinAction = new AbstractAction()
@@ -132,7 +140,7 @@ public class ChatWindow extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				// TODO JOIN
+				joinBox.setVisible(true);
 			}
 		};
 		AbstractAction partAction = new AbstractAction()
@@ -145,7 +153,7 @@ public class ChatWindow extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				// TODO PART
+				partBox.setVisible(true);
 			}
 		};
 
@@ -184,12 +192,12 @@ public class ChatWindow extends JFrame
 		chatMenu.add(nickAction);
 		chatMenu.add(awayMenu);
 		chatMenu.addSeparator();
+		chatMenu.add(joinAction);
+		chatMenu.add(partAction);
+		chatMenu.addSeparator();
 		chatMenu.add(infoAction);
 		chatMenu.add(modeAction);
 		chatMenu.add(topicAction);
-		chatMenu.addSeparator();
-		chatMenu.add(joinAction);
-		chatMenu.add(partAction);
 		chatMenu.addSeparator();
 		chatMenu.add("メッセージを送信...");
 		chatMenu.add("コマンドを送信...");

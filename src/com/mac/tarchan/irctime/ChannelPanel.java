@@ -36,7 +36,7 @@ public class ChannelPanel extends JPanel
 
 	private JTextField inputText = new JTextField(30);
 
-	private JButton sendButton = new JButton("Send");
+	private JButton sendButton = new JButton("送信");
 
 	private JTextPane mainText = new JTextPane();
 

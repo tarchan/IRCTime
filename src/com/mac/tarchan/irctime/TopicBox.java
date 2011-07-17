@@ -1,5 +1,5 @@
 /*
- * NickBox.java
+ * TopicBox.java
  * IRCTime
  * 
  * Created by tarchan on 2011/07/17.
@@ -15,19 +15,19 @@ import javax.swing.JTextField;
 import com.mac.tarchan.desktop.OptionBox;
 
 /**
- * NickBox
+ * TopicBox
  */
 @SuppressWarnings("serial")
-public class NickBox extends OptionBox
+public class TopicBox extends OptionBox
 {
-	/** ニックネーム */
-	private JTextField nickBox = new JTextField(20);
+	/** トピック */
+	private JTextField topicBox = new JTextField(20);
 
-	public NickBox(Window owner)
+	public TopicBox(Window owner)
 	{
 		super(owner);
-		mainBox.add(new JLabel("ニックネーム:"));
-		mainBox.add(nickBox);
-		okButton.setText("ニックネームを変更");
+		mainBox.add(new JLabel("トピック:"));
+		mainBox.add(topicBox);
+		okButton.setText("トピックを変更");
 	}
 }
