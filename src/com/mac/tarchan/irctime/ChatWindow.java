@@ -81,17 +81,71 @@ public class ChatWindow extends JFrame
 				nickBox.setVisible(true);
 			}
 		};
+		AbstractAction infoAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "情報を見る");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta I"));
+			}
 
-//		JMenu ircMenu = new JMenu("IRC");
-//		ircMenu.add(loginAction);
-//		ircMenu.add(nickItem);
-//		ircMenu.addSeparator();
-//		ircMenu.add(joinItem);
-//		ircMenu.add(partItem);
-//		ircMenu.add(modeItem);
-//		ircMenu.add(topicItem);
-//		ircMenu.addSeparator();
-//		ircMenu.add(quitItem);
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				// TODO INFO
+			}
+		};
+		AbstractAction modeAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "モードを変更...");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta O"));
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				// TODO MODE
+			}
+		};
+		AbstractAction topicAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "トピックを変更...");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta T"));
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				// TODO TOPIC
+			}
+		};
+		AbstractAction joinAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "チャットに参加...");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta J"));
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				// TODO JOIN
+			}
+		};
+		AbstractAction partAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "チャットを離脱...");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("meta P"));
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				// TODO PART
+			}
+		};
 
 		JMenu awayMenu = new JMenu("自分の状況");
 		awayMenu.add("チャット可能");
@@ -108,13 +162,12 @@ public class ChatWindow extends JFrame
 		chatMenu.add(nickAction);
 		chatMenu.add(awayMenu);
 		chatMenu.addSeparator();
-		chatMenu.add("チャンネル情報を見る");
+		chatMenu.add(infoAction);
+		chatMenu.add(modeAction);
+		chatMenu.add(topicAction);
 		chatMenu.addSeparator();
-		chatMenu.add("チャットに参加...");
-//		chatMenu.add("チャットへの招待...");
-//		chatMenu.add("チャットを閉じる...");
-//		chatMenu.add("メンバーを追加...");
-		chatMenu.add("チャットを離脱...");
+		chatMenu.add(joinAction);
+		chatMenu.add(partAction);
 		chatMenu.addSeparator();
 		chatMenu.add("メッセージを送信...");
 		chatMenu.add("コマンドを送信...");

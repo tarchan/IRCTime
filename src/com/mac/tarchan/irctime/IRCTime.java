@@ -223,12 +223,12 @@ public class IRCTime extends BotAdapter
 	{
 		long when = prefix.getWhen();
 		String oldNick = prefix.getNick();
-		String nowNick = irc.getUserNick();
-		log.debug("oldNick=" + oldNick);
-		log.debug("newNick=" + newNick);
-		log.debug("nowNick=" + nowNick);
+//		String nowNick = irc.getUserNick();
+//		log.debug("oldNick=" + oldNick);
+//		log.debug("newNick=" + newNick);
+//		log.debug("nowNick=" + nowNick);
 		String line = String.format("%s %s -> %s (%s)", getTimeString(when), oldNick, newNick, prefix);
-		log.info(line);
+//		log.info(line);
 		window.appendLineForNick(oldNick, line);
 		window.updateNick(oldNick, newNick);
 	}
@@ -341,11 +341,11 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onStop()
+	public void onStop(Prefix prefix)
 	{
 		long when = System.currentTimeMillis();
 		String line = String.format("%s (%s) %s", getTimeString(when), "ERROR", "ネットワークが切断されました。");
-		window.appendLine(irc.getHost(), line);
+		window.appendLine(prefix.getNick(), line);
 	}
 
 	@Override
