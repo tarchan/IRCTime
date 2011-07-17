@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
@@ -147,13 +149,33 @@ public class ChatWindow extends JFrame
 			}
 		};
 
+		JRadioButtonMenuItem awayItem1 = new JRadioButtonMenuItem("チャット可能");
+		awayItem1.setSelected(true);
+		JRadioButtonMenuItem awayItem2 = new JRadioButtonMenuItem("不在");
+		JRadioButtonMenuItem awayItem3 = new JRadioButtonMenuItem("昼食のため外出中");
+		JRadioButtonMenuItem awayItem4 = new JRadioButtonMenuItem("電話中");
+		JRadioButtonMenuItem awayItem5 = new JRadioButtonMenuItem("会議中");
+
+		ButtonGroup awayGroup = new ButtonGroup();
+		awayGroup.add(awayItem1);
+		awayGroup.add(awayItem2);
+		awayGroup.add(awayItem3);
+		awayGroup.add(awayItem4);
+		awayGroup.add(awayItem5);
+
 		JMenu awayMenu = new JMenu("自分の状況");
-		awayMenu.add("チャット可能");
+		awayMenu.add(awayItem1);
 		awayMenu.addSeparator();
-		awayMenu.add("不在");
-		awayMenu.add("昼食のため外出中");
-		awayMenu.add("電話中");
-		awayMenu.add("会議中");
+		awayMenu.add(awayItem2);
+		awayMenu.add(awayItem3);
+		awayMenu.add(awayItem4);
+		awayMenu.add(awayItem5);
+//		awayMenu.add("チャット可能");
+//		awayMenu.addSeparator();
+//		awayMenu.add("不在");
+//		awayMenu.add("昼食のため外出中");
+//		awayMenu.add("電話中");
+//		awayMenu.add("会議中");
 		awayMenu.addSeparator();
 		awayMenu.add("不在メッセージをカスタマイズ...");
 
