@@ -191,10 +191,6 @@ public class IRCTime extends BotAdapter
 		{
 			irc.nick(nick);
 		}
-
-//		Component source = Component.class.cast(evt.getSource());
-//		Dialog nickBox = DesktopSupport.componentOwner(source, Dialog.class);
-//		nickBox.setVisible(false);
 		hideDialog(evt.getSource());
 	}
 
@@ -228,6 +224,22 @@ public class IRCTime extends BotAdapter
 			irc.part(channel, text);
 		}
 		hideDialog(evt.getSource());
+	}
+
+	public void sendAway(ActionEvent evt)
+	{
+		log.info(evt);
+		Component component = Component.class.cast(evt.getSource());
+		String name = component.getName();
+		String command = evt.getActionCommand();
+		if (name.equals(ChatWindow.AWAY_ON))
+		{
+			irc.away(command);
+		}
+		else if (name.equals(ChatWindow.AWAY_OFF))
+		{
+			irc.away();
+		}
 	}
 
 	@Override

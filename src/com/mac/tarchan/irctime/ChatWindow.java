@@ -13,6 +13,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
@@ -30,7 +31,13 @@ public class ChatWindow extends JFrame
 {
 	private static final Log log = LogFactory.getLog(ChatWindow.class);
 
+	public static final String AWAY_ON = "awayOn";
+
+	public static final String AWAY_OFF = "awayOff";
+
 	private JTabbedPane tabPanel = new JTabbedPane();
+
+	private JMenu awayMenu;
 
 	private LoginBox loginBox;
 
@@ -158,13 +165,32 @@ public class ChatWindow extends JFrame
 				partBox.setVisible(true);
 			}
 		};
+		AbstractAction editAwayAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "不在メッセージをカスタマイズ...");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				// TODO AWAY
+			}
+		};
 
 		JRadioButtonMenuItem awayItem1 = new JRadioButtonMenuItem("チャット可能");
 		awayItem1.setSelected(true);
+		awayItem1.setName(AWAY_OFF);
 		JRadioButtonMenuItem awayItem2 = new JRadioButtonMenuItem("不在");
+		awayItem2.setName(AWAY_ON);
 		JRadioButtonMenuItem awayItem3 = new JRadioButtonMenuItem("昼食のため外出中");
+		awayItem3.setName(AWAY_ON);
 		JRadioButtonMenuItem awayItem4 = new JRadioButtonMenuItem("電話中");
+		awayItem4.setName(AWAY_ON);
 		JRadioButtonMenuItem awayItem5 = new JRadioButtonMenuItem("会議中");
+		awayItem5.setName(AWAY_ON);
+		JMenuItem awayItem0 = new JMenuItem(editAwayAction);
+		awayItem0.setName("editAway");
 
 		ButtonGroup awayGroup = new ButtonGroup();
 		awayGroup.add(awayItem1);
@@ -173,21 +199,15 @@ public class ChatWindow extends JFrame
 		awayGroup.add(awayItem4);
 		awayGroup.add(awayItem5);
 
-		JMenu awayMenu = new JMenu("自分の状況");
+		awayMenu = new JMenu("自分の状況");
 		awayMenu.add(awayItem1);
 		awayMenu.addSeparator();
 		awayMenu.add(awayItem2);
 		awayMenu.add(awayItem3);
 		awayMenu.add(awayItem4);
 		awayMenu.add(awayItem5);
-//		awayMenu.add("チャット可能");
-//		awayMenu.addSeparator();
-//		awayMenu.add("不在");
-//		awayMenu.add("昼食のため外出中");
-//		awayMenu.add("電話中");
-//		awayMenu.add("会議中");
 		awayMenu.addSeparator();
-		awayMenu.add("不在メッセージをカスタマイズ...");
+		awayMenu.add(awayItem0);
 
 		JMenu chatMenu = new JMenu("チャット");
 		chatMenu.add(loginAction);
@@ -274,6 +294,7 @@ public class ChatWindow extends JFrame
 		EventQuery.from(topicBox).input().click(app, "sendTopic", "");
 		EventQuery.from(joinBox).input().click(app, "sendJoin", "");
 		EventQuery.from(partBox).input().click(app, "sendPart", "");
+		EventQuery.from(awayMenu).button().click(app, "sendAway", "");
 	}
 
 	public ChannelPanel currentTab()
