@@ -12,8 +12,10 @@ import java.awt.Window;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 
 import com.mac.tarchan.desktop.OptionBox;
+import com.mac.tarchan.desktop.SpringUtilities;
 
 /**
  * LoginBox
@@ -36,14 +38,27 @@ public class LoginBox extends OptionBox
 	public LoginBox(Window owner)
 	{
 		super(owner);
-		mainBox.add(new JLabel("ホスト名:"));
+
+		JLabel hostLabel = new JLabel("ホスト名:", JLabel.TRAILING);
+		hostLabel.setLabelFor(hostBox);
+		JLabel portLabel = new JLabel("ポート番号:", JLabel.TRAILING);
+		portLabel.setLabelFor(portBox);
+		JLabel userLabel = new JLabel("ユーザ名:", JLabel.TRAILING);
+		userLabel.setLabelFor(userBox);
+		JLabel passLabel = new JLabel("パスワード:", JLabel.TRAILING);
+		passLabel.setLabelFor(passBox);
+
+		mainBox.add(hostLabel);
 		mainBox.add(hostBox);
-		mainBox.add(new JLabel("ポート番号:"));
+		mainBox.add(portLabel);
 		mainBox.add(portBox);
-		mainBox.add(new JLabel("ユーザ名:"));
+		mainBox.add(userLabel);
 		mainBox.add(userBox);
-		mainBox.add(new JLabel("パスワード:"));
+		mainBox.add(passLabel);
 		mainBox.add(passBox);
 		okButton.setText("ログイン");
+
+		mainBox.setLayout(new SpringLayout());
+		SpringUtilities.makeCompactGrid(mainBox, 4, 2, 8, 8, 8, 8);
 	}
 }
