@@ -262,7 +262,7 @@ public class ChatWindow extends JFrame
 
 	public ChannelPanel getTab(int index)
 	{
-		ChannelPanel tab = (ChannelPanel)tabPanel.getComponentAt(index);
+		ChannelPanel tab = ChannelPanel.class.cast(tabPanel.getComponentAt(index));
 		return tab;
 	}
 
@@ -272,6 +272,8 @@ public class ChatWindow extends JFrame
 
 		EventQuery.from(nickBox).input().click(app, "sendNick", "");
 		EventQuery.from(topicBox).input().click(app, "sendTopic", "");
+		EventQuery.from(joinBox).input().click(app, "sendJoin", "");
+		EventQuery.from(partBox).input().click(app, "sendPart", "");
 	}
 
 	public ChannelPanel currentTab()

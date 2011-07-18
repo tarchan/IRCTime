@@ -201,11 +201,32 @@ public class IRCTime extends BotAdapter
 	public void sendTopic(ActionEvent evt)
 	{
 		ChannelPanel tab = window.currentTab();
-//		log.info(evt);
-//		log.info(tab);
-		String topic = evt.getActionCommand();
 		String channel = tab.getName();
+		String topic = evt.getActionCommand();
 		irc.topic(channel, topic);
+		hideDialog(evt.getSource());
+	}
+
+	public void sendJoin(ActionEvent evt)
+	{
+		log.info(evt);
+		String channel = evt.getActionCommand();
+		if (channel.startsWith("#"))
+		{
+			irc.join(channel);
+		}
+		hideDialog(evt.getSource());
+	}
+
+	public void sendPart(ActionEvent evt)
+	{
+		ChannelPanel tab = window.currentTab();
+		String channel = tab.getName();
+		String text = evt.getActionCommand();
+		if (channel.startsWith("#"))
+		{
+			irc.part(channel, text);
+		}
 		hideDialog(evt.getSource());
 	}
 
