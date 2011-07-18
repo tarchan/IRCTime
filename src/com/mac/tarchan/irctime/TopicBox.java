@@ -30,4 +30,14 @@ public class TopicBox extends OptionBox
 		mainBox.add(topicBox);
 		okButton.setText("トピックを変更");
 	}
+
+	public void setTopic(String topic)
+	{
+		topicBox.setText(topic);
+	}
+
+	public String getTopic()
+	{
+		return topicBox.getText();
+	}
 }

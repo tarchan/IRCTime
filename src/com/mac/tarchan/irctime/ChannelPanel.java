@@ -134,6 +134,11 @@ public class ChannelPanel extends JPanel
 		updateTopic();
 	}
 
+	public String getTopic()
+	{
+		return topicText;
+	}
+
 	public boolean containsNick(String nick)
 	{
 		if (nick == null) return false;

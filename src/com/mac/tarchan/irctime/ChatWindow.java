@@ -127,6 +127,8 @@ public class ChatWindow extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
+				String topic = currentTab().getTopic();
+				topicBox.setTopic(topic);
 				topicBox.setVisible(true);
 			}
 		};
@@ -269,13 +271,14 @@ public class ChatWindow extends JFrame
 		this.app = app;
 
 		EventQuery.from(nickBox).input().click(app, "sendNick", "");
+		EventQuery.from(topicBox).input().click(app, "sendTopic", "");
 	}
 
-//	public ChatPanel currentTab()
-//	{
-//		ChatPanel tab = (ChatPanel)tabPanel.getSelectedComponent();
-//		return tab;
-//	}
+	public ChannelPanel currentTab()
+	{
+		ChannelPanel tab = ChannelPanel.class.cast(tabPanel.getSelectedComponent());
+		return tab;
+	}
 
 	void appendLine(String name, String text)
 	{
