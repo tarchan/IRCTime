@@ -3,6 +3,7 @@
  */
 package com.mac.tarchan.irctime;
 
+import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -175,6 +176,17 @@ public class ChatWindow extends JFrame
 			public void actionPerformed(ActionEvent evt)
 			{
 				// TODO AWAY
+				for (Component comp : awayMenu.getMenuComponents())
+				{
+					if (JMenuItem.class.isInstance(comp))
+					{
+						JMenuItem item = JMenuItem.class.cast(comp);
+						if (AWAY_ON.equals(item.getName()))
+						{
+							log.info(item.getText());
+						}
+					}
+				}
 			}
 		};
 
@@ -221,10 +233,11 @@ public class ChatWindow extends JFrame
 		chatMenu.add(modeAction);
 		chatMenu.add(topicAction);
 		chatMenu.addSeparator();
-		chatMenu.add("メッセージを送信...");
-		chatMenu.add("コマンドを送信...");
-		chatMenu.add("CTCP コマンドを送信...");
-		chatMenu.add("アクションを送信...");
+//		chatMenu.add("メッセージを送信...");
+//		chatMenu.add("コマンドを送信...");
+//		chatMenu.add("CTCP コマンドを送信...");
+//		chatMenu.add("アクションを送信...");
+		chatMenu.add("チャンネル一覧");
 
 		JMenu memberMenu = new JMenu("メンバー");
 		memberMenu.add("ダイレクトメッセージを送信...");
@@ -238,7 +251,7 @@ public class ChatWindow extends JFrame
 		memberMenu.add("発言権を付ける");
 		memberMenu.add("発言権を外す");
 		memberMenu.addSeparator();
-		memberMenu.add("ブロック...");
+		memberMenu.add("BAN...");
 		memberMenu.add("キック...");
 
 		JMenu windowMenu = new JMenu("ウインドウ");
