@@ -242,6 +242,23 @@ public class IRCTime extends BotAdapter
 		}
 	}
 
+	public void changeTab(ChannelPanel tab)
+	{
+		log.info(tab);
+		String channel = tab.getName();
+		String topic = tab.getTopic();
+		int count = tab.getNickCount();
+		if (topic != null)
+		{
+			String title = String.format("%s (%s,%s) - IRCTime", channel, topic, count);
+			window.setTitle(title);
+		}
+		else
+		{
+			window.setTitle("IRCTime");
+		}
+	}
+
 	@Override
 	public void onStart()
 	{

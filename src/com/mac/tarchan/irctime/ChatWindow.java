@@ -169,13 +169,13 @@ public class ChatWindow extends JFrame
 		AbstractAction editAwayAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "不在メッセージをカスタマイズ...");
+				this.putValue(NAME, "不在メッセージを編集...");
 			}
 
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				// TODO AWAY
+				// TODO 不在メッセージを編集
 				for (Component comp : awayMenu.getMenuComponents())
 				{
 					if (JMenuItem.class.isInstance(comp))
@@ -308,6 +308,7 @@ public class ChatWindow extends JFrame
 		EventQuery.from(joinBox).input().click(app, "sendJoin", "");
 		EventQuery.from(partBox).input().click(app, "sendPart", "");
 		EventQuery.from(awayMenu).button().click(app, "sendAway", "");
+		EventQuery.from(tabPanel).change(app, "changeTab", "source.selectedComponent");
 	}
 
 	public ChannelPanel currentTab()

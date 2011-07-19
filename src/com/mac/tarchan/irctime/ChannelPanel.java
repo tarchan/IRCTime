@@ -107,7 +107,7 @@ public class ChannelPanel extends JPanel
 
 	void updateTopic()
 	{
-		topicLabel.setText(String.format("%s (%,d)", topicText, nameModel.size()));
+//		topicLabel.setText(String.format("%s (%,d)", topicText, nameModel.size()));
 	}
 
 	public void appendLine(String text)
@@ -137,6 +137,11 @@ public class ChannelPanel extends JPanel
 	public String getTopic()
 	{
 		return topicText;
+	}
+
+	public int getNickCount()
+	{
+		return nameModel.size();
 	}
 
 	public boolean containsNick(String nick)
