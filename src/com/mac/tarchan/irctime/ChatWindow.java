@@ -193,31 +193,31 @@ public class ChatWindow extends JFrame
 		JRadioButtonMenuItem awayItem1 = new JRadioButtonMenuItem("チャット可能");
 		awayItem1.setSelected(true);
 		awayItem1.setName(AWAY_OFF);
-		JRadioButtonMenuItem awayItem2 = new JRadioButtonMenuItem("不在");
-		awayItem2.setName(AWAY_ON);
-		JRadioButtonMenuItem awayItem3 = new JRadioButtonMenuItem("昼食のため外出中");
-		awayItem3.setName(AWAY_ON);
-		JRadioButtonMenuItem awayItem4 = new JRadioButtonMenuItem("電話中");
-		awayItem4.setName(AWAY_ON);
-		JRadioButtonMenuItem awayItem5 = new JRadioButtonMenuItem("会議中");
-		awayItem5.setName(AWAY_ON);
+//		JRadioButtonMenuItem awayItem2 = new JRadioButtonMenuItem("不在");
+//		awayItem2.setName(AWAY_ON);
+//		JRadioButtonMenuItem awayItem3 = new JRadioButtonMenuItem("昼食のため外出中");
+//		awayItem3.setName(AWAY_ON);
+//		JRadioButtonMenuItem awayItem4 = new JRadioButtonMenuItem("電話中");
+//		awayItem4.setName(AWAY_ON);
+//		JRadioButtonMenuItem awayItem5 = new JRadioButtonMenuItem("会議中");
+//		awayItem5.setName(AWAY_ON);
 		JMenuItem awayItem0 = new JMenuItem(editAwayAction);
 		awayItem0.setName("editAway");
-
-		ButtonGroup awayGroup = new ButtonGroup();
-		awayGroup.add(awayItem1);
-		awayGroup.add(awayItem2);
-		awayGroup.add(awayItem3);
-		awayGroup.add(awayItem4);
-		awayGroup.add(awayItem5);
 
 		awayMenu = new JMenu("自分の状況");
 		awayMenu.add(awayItem1);
 		awayMenu.addSeparator();
-		awayMenu.add(awayItem2);
-		awayMenu.add(awayItem3);
-		awayMenu.add(awayItem4);
-		awayMenu.add(awayItem5);
+
+		ButtonGroup awayGroup = new ButtonGroup();
+		String[] awayMessages = {"不在", "昼食のため外出中", "電話中", "会議中", "就寝中"};
+		for (String msg : awayMessages)
+		{
+			JRadioButtonMenuItem awayItem = new JRadioButtonMenuItem(msg);
+			awayItem.setName(AWAY_ON);
+			awayGroup.add(awayItem);
+			awayMenu.add(awayItem);
+		}
+
 		awayMenu.addSeparator();
 		awayMenu.add(awayItem0);
 
