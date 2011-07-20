@@ -204,11 +204,12 @@ public class ChatWindow extends JFrame
 		JMenuItem awayItem0 = new JMenuItem(editAwayAction);
 		awayItem0.setName("editAway");
 
+		ButtonGroup awayGroup = new ButtonGroup();
 		awayMenu = new JMenu("自分の状況");
+		awayGroup.add(awayItem1);
 		awayMenu.add(awayItem1);
 		awayMenu.addSeparator();
 
-		ButtonGroup awayGroup = new ButtonGroup();
 		String[] awayMessages = {"不在", "昼食のため外出中", "電話中", "会議中", "就寝中"};
 		for (String msg : awayMessages)
 		{
