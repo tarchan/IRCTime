@@ -336,9 +336,19 @@ public class IRCTime extends BotAdapter
 	@Override
 	public void onMode(Prefix prefix, String channel, String mode, String nick)
 	{
-		String line = String.format("%s has changed mode %s", channel, mode);
+		long when = prefix.getWhen();
+		String line = String.format("%s %s has changed mode %s %s", getTimeString(when), prefix.getNick(), mode, nick);
 		window.appendLine(channel, line);
 		window.updateMode(channel, mode, nick);
+	}
+
+	@Override
+	public void onMode(Prefix prefix, String channel, String mode)
+	{
+		long when = prefix.getWhen();
+		String line = String.format("%s %s has changed mode %s", getTimeString(when), prefix.getNick(), mode, channel);
+		window.appendLine(channel, line);
+//		window.updateMode(channel, mode);
 	}
 
 	@Override
