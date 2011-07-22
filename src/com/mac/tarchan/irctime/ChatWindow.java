@@ -283,7 +283,7 @@ public class ChatWindow extends JFrame
 		EventQuery.from(joinBox).input().click(app, "sendJoin", "");
 		EventQuery.from(partBox).input().click(app, "sendPart", "");
 		EventQuery.from(awayMenu).button().click(app, "sendAway", "");
-		EventQuery.from(tabPanel).change(app, "changeTab", "source.selectedComponent");
+		EventQuery.from(tabPanel).change(app, "onTabChange", "source.selectedComponent");
 	}
 
 	public ChatPanel getTab(String name)
