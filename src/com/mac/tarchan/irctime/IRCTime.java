@@ -155,7 +155,7 @@ public class IRCTime extends BotAdapter
 			long when = evt.getWhen();
 			JTextComponent input = (JTextComponent)evt.getSource();
 //			ChatPanel panel = (ChatPanel)input.getParent().getParent();
-			ChannelPanel panel = DesktopSupport.componentOwner(input, ChannelPanel.class);
+			ChatPanel panel = DesktopSupport.componentOwner(input, ChatPanel.class);
 			String channel = panel.getName();
 			String nick = irc.getUserNick();
 //			log.info(input.getParent());
@@ -196,7 +196,7 @@ public class IRCTime extends BotAdapter
 
 	public void sendTopic(ActionEvent evt)
 	{
-		ChannelPanel tab = window.currentTab();
+		ChatPanel tab = window.currentTab();
 		String channel = tab.getName();
 		String topic = evt.getActionCommand();
 		irc.topic(channel, topic);
@@ -216,7 +216,7 @@ public class IRCTime extends BotAdapter
 
 	public void sendPart(ActionEvent evt)
 	{
-		ChannelPanel tab = window.currentTab();
+		ChatPanel tab = window.currentTab();
 		String channel = tab.getName();
 		String text = evt.getActionCommand();
 		if (channel.startsWith("#"))
@@ -242,9 +242,10 @@ public class IRCTime extends BotAdapter
 		}
 	}
 
-	public void changeTab(ChannelPanel tab)
+	public void changeTab(ChatPanel tab)
 	{
 		log.info(tab);
+		tab.goInput();
 		String channel = tab.getName();
 		String topic = tab.getTopic();
 		int count = tab.getNickCount();

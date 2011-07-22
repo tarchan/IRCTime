@@ -26,9 +26,9 @@ import com.mac.tarchan.desktop.event.EventQuery;
  * ChatPanel
  */
 @SuppressWarnings("serial")
-public class ChannelPanel extends JPanel
+public class ChatPanel extends JPanel
 {
-	private static final Log log = LogFactory.getLog(ChannelPanel.class);
+	private static final Log log = LogFactory.getLog(ChatPanel.class);
 
 	private DefaultListModel nameModel = new DefaultListModel();
 
@@ -44,7 +44,7 @@ public class ChannelPanel extends JPanel
 
 	private JLabel topicLabel = new JLabel();
 
-	public ChannelPanel()
+	public ChatPanel()
 	{
 		createMain(this);
 
@@ -53,7 +53,7 @@ public class ChannelPanel extends JPanel
 			.input().click(this).end();
 	}
 
-	Component createMain(JPanel main)
+	private Component createMain(JPanel main)
 	{
 		inputText.setName("inputText");
 		inputText.setRequestFocusEnabled(true);
@@ -96,7 +96,7 @@ public class ChannelPanel extends JPanel
 		inputMessage();
 	}
 
-	void inputMessage()
+	private void inputMessage()
 	{
 		log.debug("clearText");
 		String text = inputText.getText();
@@ -105,7 +105,7 @@ public class ChannelPanel extends JPanel
 //		appendLine(text);
 	}
 
-	void updateTopic()
+	private void updateTopic()
 	{
 //		topicLabel.setText(String.format("%s (%,d)", topicText, nameModel.size()));
 	}
@@ -194,5 +194,10 @@ public class ChannelPanel extends JPanel
 		{
 			throw new RuntimeException("更新するメンバーが見つかりません。: " + nick);
 		}
+	}
+
+	public void goInput()
+	{
+		inputText.requestFocus();
 	}
 }

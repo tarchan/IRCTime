@@ -274,12 +274,24 @@ public class ChatWindow extends JFrame
 		return menuBar;
 	}
 
-	public ChannelPanel getTab(String name)
+	public void setApp(IRCTime app)
+	{
+		this.app = app;
+	
+		EventQuery.from(nickBox).input().click(app, "sendNick", "");
+		EventQuery.from(topicBox).input().click(app, "sendTopic", "");
+		EventQuery.from(joinBox).input().click(app, "sendJoin", "");
+		EventQuery.from(partBox).input().click(app, "sendPart", "");
+		EventQuery.from(awayMenu).button().click(app, "sendAway", "");
+		EventQuery.from(tabPanel).change(app, "changeTab", "source.selectedComponent");
+	}
+
+	public ChatPanel getTab(String name)
 	{
 		int index = name != null ? tabPanel.indexOfTab(name) : 0;
 		if (index < 0)
 		{
-			ChannelPanel tab = new ChannelPanel();
+			ChatPanel tab = new ChatPanel();
 			tab.setName(name);
 //			tab.setTopic(name);
 			tabPanel.addTab(name, tab);
@@ -294,73 +306,61 @@ public class ChatWindow extends JFrame
 		}
 	}
 
-	public ChannelPanel getTab(int index)
+	public ChatPanel getTab(int index)
 	{
-		ChannelPanel tab = ChannelPanel.class.cast(tabPanel.getComponentAt(index));
+		ChatPanel tab = ChatPanel.class.cast(tabPanel.getComponentAt(index));
 		return tab;
 	}
 
-	public void setApp(IRCTime app)
+	public ChatPanel currentTab()
 	{
-		this.app = app;
-
-		EventQuery.from(nickBox).input().click(app, "sendNick", "");
-		EventQuery.from(topicBox).input().click(app, "sendTopic", "");
-		EventQuery.from(joinBox).input().click(app, "sendJoin", "");
-		EventQuery.from(partBox).input().click(app, "sendPart", "");
-		EventQuery.from(awayMenu).button().click(app, "sendAway", "");
-		EventQuery.from(tabPanel).change(app, "changeTab", "source.selectedComponent");
-	}
-
-	public ChannelPanel currentTab()
-	{
-		ChannelPanel tab = ChannelPanel.class.cast(tabPanel.getSelectedComponent());
+		ChatPanel tab = ChatPanel.class.cast(tabPanel.getSelectedComponent());
 		return tab;
 	}
 
 	void appendLine(String name, String text)
 	{
-		ChannelPanel tab = getTab(name);
+		ChatPanel tab = getTab(name);
 		tab.appendLine(text);
 	}
 
-	ChannelPanel[] findPanel(String nick)
+	ChatPanel[] findPanel(String nick)
 	{
-		List<ChannelPanel> list = new ArrayList<ChannelPanel>();
+		List<ChatPanel> list = new ArrayList<ChatPanel>();
 		if (nick != null)
 		{
 			int count = tabPanel.getTabCount();
 			for (int i = 0; i < count; i++)
 			{
-				ChannelPanel tab = getTab(i);
+				ChatPanel tab = getTab(i);
 				if (tab == null) throw new RuntimeException("タブが見つかりません。: " + i);
 				if (tab.containsNick(nick)) list.add(tab);
 			}
 			if (list.size() == 0) log.warn(String.format("%s を含むタブが見つかりません。(%s)", nick, count));
 		}
-		return list.toArray(new ChannelPanel[]{});
+		return list.toArray(new ChatPanel[]{});
 	}
 
 	void appendLineForNick(String nick, String text)
 	{
-		ChannelPanel[] list = findPanel(nick);
+		ChatPanel[] list = findPanel(nick);
 		if (list.length > 0)
 		{
-			for (ChannelPanel tab : list)
+			for (ChatPanel tab : list)
 			{
 				tab.appendLine(text);
 			}
 		}
 		else
 		{
-			ChannelPanel tab = getTab(0);
+			ChatPanel tab = getTab(0);
 			tab.appendLine(text);
 		}
 	}
 
 	void setTopic(String name, String text)
 	{
-		ChannelPanel tab = getTab(name);
+		ChatPanel tab = getTab(name);
 		tab.setTopic(text);
 	}
 
@@ -368,17 +368,17 @@ public class ChatWindow extends JFrame
 	{
 		if (channel == null) throw new RuntimeException("チャンネル名が見つかりません。");
 		if (names == null) throw new RuntimeException("リストが見つかりません。");
-		ChannelPanel tab = getTab(channel);
+		ChatPanel tab = getTab(channel);
 		if (tab == null) throw new RuntimeException("タブが見つかりません。");
 		tab.setNames(names);
 	}
 
 	public void updateNick(String oldNick, String newNick)
 	{
-		ChannelPanel[] list = findPanel(oldNick);
+		ChatPanel[] list = findPanel(oldNick);
 		if (list.length > 0)
 		{
-			for (ChannelPanel tab : list)
+			for (ChatPanel tab : list)
 			{
 				tab.updateNick(oldNick, newNick);
 			}
@@ -387,14 +387,14 @@ public class ChatWindow extends JFrame
 
 	public void addNick(String channel, String nick)
 	{
-		ChannelPanel tab = getTab(channel);
+		ChatPanel tab = getTab(channel);
 		if (tab == null) throw new RuntimeException("タブが見つかりません。");
 		tab.addNick(nick);
 	}
 
 	public void deleteNick(String channel, String nick)
 	{
-		ChannelPanel tab = getTab(channel);
+		ChatPanel tab = getTab(channel);
 		if (tab == null) throw new RuntimeException("タブが見つかりません。");
 		tab.deleteNick(nick);
 	}
@@ -404,7 +404,7 @@ public class ChatWindow extends JFrame
 		int count = tabPanel.getTabCount();
 		for (int i = 0; i < count; i++)
 		{
-			ChannelPanel tab = getTab(i);
+			ChatPanel tab = getTab(i);
 			if (tab == null) throw new RuntimeException("タブが見つかりません。: " + i);
 			if (tab.containsNick(nick)) tab.deleteNick(nick);
 		}
@@ -412,7 +412,7 @@ public class ChatWindow extends JFrame
 
 	public void updateMode(String channel, String mode, String nick)
 	{
-		ChannelPanel tab = getTab(channel);
+		ChatPanel tab = getTab(channel);
 		if (tab == null) throw new RuntimeException("タブが見つかりません。");
 		tab.updateMode(nick, mode);
 	}
