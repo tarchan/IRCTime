@@ -237,6 +237,38 @@ public class ChatWindow extends JFrame
 				app.sendDeVoice();
 			}
 		};
+		AbstractAction leftTabAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "前のチャット");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt meta LEFT"));
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				int index = currentTabIndex();
+				int count = getTabCount();
+//				log.debug(index + " of " + count);
+				selectTab((index + count - 1) % count);
+			}
+		};
+		AbstractAction rightTabAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "次のチャット");
+				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt meta RIGHT"));
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				int index = currentTabIndex();
+				int count = getTabCount();
+//				log.debug(index + " of " + count);
+				selectTab((index + 1) % count);
+			}
+		};
 
 		JRadioButtonMenuItem awayItem1 = new JRadioButtonMenuItem("チャット可能");
 		awayItem1.setSelected(true);
@@ -299,10 +331,6 @@ public class ChatWindow extends JFrame
 		memberMenu.add(deopAction);
 		memberMenu.add(voiceAction);
 		memberMenu.add(devoiceAction);
-//		memberMenu.add("なるとを付ける");
-//		memberMenu.add("なるとを外す");
-//		memberMenu.add("発言権を付ける");
-//		memberMenu.add("発言権を外す");
 		memberMenu.addSeparator();
 		memberMenu.add("BAN...");
 		memberMenu.add("キック...");
@@ -313,8 +341,10 @@ public class ChatWindow extends JFrame
 		windowMenu.addSeparator();
 		windowMenu.add("すべてを手前に移動");
 		windowMenu.addSeparator();
-		windowMenu.add("前のチャット");
-		windowMenu.add("次のチャット");
+//		windowMenu.add("前のチャット");
+//		windowMenu.add("次のチャット");
+		windowMenu.add(leftTabAction);
+		windowMenu.add(rightTabAction);
 		windowMenu.addSeparator();
 		windowMenu.add("ファイル転送");
 
@@ -368,6 +398,23 @@ public class ChatWindow extends JFrame
 	{
 		ChatPanel tab = ChatPanel.class.cast(tabPanel.getSelectedComponent());
 		return tab;
+	}
+
+	public int currentTabIndex()
+	{
+		int index = tabPanel.getSelectedIndex();
+		return index;
+	}
+
+	public int getTabCount()
+	{
+		return tabPanel.getTabCount();
+	}
+
+	public ChatPanel selectTab(int index)
+	{
+		tabPanel.setSelectedIndex(index);
+		return getTab(index);
 	}
 
 	void appendLine(String name, String text)
