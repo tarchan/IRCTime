@@ -59,6 +59,7 @@ public class IRCTime extends BotAdapter
 						{
 							try
 							{
+								log.info("IRCTimeを終了します。");
 								app.irc.quit("Quit IRCTime");
 								app.irc.close();
 							}
@@ -239,6 +240,50 @@ public class IRCTime extends BotAdapter
 		else if (name.equals(ChatWindow.AWAY_OFF))
 		{
 			irc.away();
+		}
+	}
+
+	public void sendOp()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			log.debug(item.getNick());
+			irc.mode(tab.getName(), "+o", item.getNick());
+		}
+	}
+
+	public void sendDeOp()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			log.debug(item.getNick());
+			irc.mode(tab.getName(), "-o", item.getNick());
+		}
+	}
+
+	public void sendVoice()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			log.debug(item.getNick());
+			irc.mode(tab.getName(), "+v", item.getNick());
+		}
+	}
+
+	public void sendDeVoice()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			log.debug(item.getNick());
+			irc.mode(tab.getName(), "-v", item.getNick());
 		}
 	}
 

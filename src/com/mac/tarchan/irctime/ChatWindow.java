@@ -122,7 +122,7 @@ public class ChatWindow extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent evt)
 			{
-				// TODO MODE
+				// TODO チャンネルモードを変更
 			}
 		};
 		AbstractAction topicAction = new AbstractAction()
@@ -189,6 +189,54 @@ public class ChatWindow extends JFrame
 				}
 			}
 		};
+		AbstractAction opAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "なるとを付ける");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendOp();
+			}
+		};
+		AbstractAction deopAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "なるとを外す");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendDeOp();
+			}
+		};
+		AbstractAction voiceAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "発言権を付ける");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendVoice();
+			}
+		};
+		AbstractAction devoiceAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "発言権を外す");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendDeVoice();
+			}
+		};
 
 		JRadioButtonMenuItem awayItem1 = new JRadioButtonMenuItem("チャット可能");
 		awayItem1.setSelected(true);
@@ -247,10 +295,14 @@ public class ChatWindow extends JFrame
 		memberMenu.addSeparator();
 		memberMenu.add("メンバー情報を見る");
 		memberMenu.addSeparator();
-		memberMenu.add("なるとを付ける");
-		memberMenu.add("なるとを外す");
-		memberMenu.add("発言権を付ける");
-		memberMenu.add("発言権を外す");
+		memberMenu.add(opAction);
+		memberMenu.add(deopAction);
+		memberMenu.add(voiceAction);
+		memberMenu.add(devoiceAction);
+//		memberMenu.add("なるとを付ける");
+//		memberMenu.add("なるとを外す");
+//		memberMenu.add("発言権を付ける");
+//		memberMenu.add("発言権を外す");
 		memberMenu.addSeparator();
 		memberMenu.add("BAN...");
 		memberMenu.add("キック...");

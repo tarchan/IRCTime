@@ -5,6 +5,7 @@ package com.mac.tarchan.irctime;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.Arrays;
 
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
@@ -105,6 +106,11 @@ public class ChatPanel extends JPanel
 //		appendLine(text);
 	}
 
+	public void goInput()
+	{
+		inputText.requestFocus();
+	}
+
 	private void updateTopic()
 	{
 //		topicLabel.setText(String.format("%s (%,d)", topicText, nameModel.size()));
@@ -196,8 +202,9 @@ public class ChatPanel extends JPanel
 		}
 	}
 
-	public void goInput()
+	public ChannelMember[] getSelectedMembers()
 	{
-		inputText.requestFocus();
+		Object[] list = nameList.getSelectedValues();
+		return Arrays.asList(list).toArray(new ChannelMember[]{});
 	}
 }

@@ -32,6 +32,11 @@ public class ChannelMember
 		setNick(nick);
 	}
 
+	public String getNick()
+	{
+		return nick;
+	}
+
 	public void setNick(String nick)
 	{
 		if (nick.startsWith("@"))
@@ -50,6 +55,16 @@ public class ChannelMember
 		}
 		this.id = this.nick.toUpperCase();
 		updateDisplayNick();
+	}
+
+	public boolean isOp()
+	{
+		return op;
+	}
+
+	public boolean isVoice()
+	{
+		return voice;
 	}
 
 	public void setMode(String mode)
