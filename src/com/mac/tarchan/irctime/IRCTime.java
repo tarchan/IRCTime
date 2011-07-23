@@ -133,9 +133,14 @@ public class IRCTime extends BotAdapter
 		return String.format("%tH:%<tM", when);
 	}
 
+	private boolean isChannel(String name)
+	{
+		return name != null && name.matches("^[#&+!].+");
+	}
+
 	private boolean isHost(String name)
 	{
-		return name != null && !name.startsWith("#") && name.contains(".");
+		return name != null && !isChannel(name) && name.contains(".");
 	}
 
 	private void hideDialog(Object source)
@@ -208,7 +213,7 @@ public class IRCTime extends BotAdapter
 	{
 		log.info(evt);
 		String channel = evt.getActionCommand();
-		if (channel.startsWith("#"))
+		if (isChannel(channel))
 		{
 			irc.join(channel);
 		}
@@ -294,14 +299,19 @@ public class IRCTime extends BotAdapter
 		String channel = tab.getName();
 		String topic = tab.getTopic();
 		int count = tab.getNickCount();
-		if (topic != null)
+		if (count == 0)
 		{
-			String title = String.format("%s (%s,%s) - IRCTime", channel, topic, count);
+			window.setTitle("IRCTime");
+		}
+		else if (topic == null)
+		{
+			String title = String.format("%s (%s,%s) - IRCTime", channel, "", count);
 			window.setTitle(title);
 		}
 		else
 		{
-			window.setTitle("IRCTime");
+			String title = String.format("%s (%s,%s) - IRCTime", channel, topic, count);
+			window.setTitle(title);
 		}
 	}
 
