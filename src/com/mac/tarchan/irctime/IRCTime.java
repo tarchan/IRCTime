@@ -211,7 +211,7 @@ public class IRCTime extends BotAdapter
 
 	public void sendJoin(ActionEvent evt)
 	{
-		log.info(evt);
+//		log.info(evt);
 		String channel = evt.getActionCommand();
 		if (isChannel(channel))
 		{
@@ -234,7 +234,7 @@ public class IRCTime extends BotAdapter
 
 	public void sendAway(ActionEvent evt)
 	{
-		log.info(evt);
+//		log.info(evt);
 		Component component = Component.class.cast(evt.getSource());
 		String name = component.getName();
 		String command = evt.getActionCommand();
@@ -254,7 +254,7 @@ public class IRCTime extends BotAdapter
 		ChannelMember[] list = tab.getSelectedMembers();
 		for (ChannelMember item : list)
 		{
-			log.debug(item.getNick());
+//			log.debug(item.getNick());
 			irc.mode(tab.getName(), "+o", item.getNick());
 		}
 	}
@@ -265,7 +265,7 @@ public class IRCTime extends BotAdapter
 		ChannelMember[] list = tab.getSelectedMembers();
 		for (ChannelMember item : list)
 		{
-			log.debug(item.getNick());
+//			log.debug(item.getNick());
 			irc.mode(tab.getName(), "-o", item.getNick());
 		}
 	}
@@ -276,7 +276,7 @@ public class IRCTime extends BotAdapter
 		ChannelMember[] list = tab.getSelectedMembers();
 		for (ChannelMember item : list)
 		{
-			log.debug(item.getNick());
+//			log.debug(item.getNick());
 			irc.mode(tab.getName(), "+v", item.getNick());
 		}
 	}
@@ -287,8 +287,18 @@ public class IRCTime extends BotAdapter
 		ChannelMember[] list = tab.getSelectedMembers();
 		for (ChannelMember item : list)
 		{
-			log.debug(item.getNick());
+//			log.debug(item.getNick());
 			irc.mode(tab.getName(), "-v", item.getNick());
+		}
+	}
+
+	public void sendCtcpPing()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			irc.ctcp(item.getNick(), "PING " + System.currentTimeMillis());
 		}
 	}
 
@@ -418,6 +428,7 @@ public class IRCTime extends BotAdapter
 	@Override
 	public void onNotice(Prefix prefix, String channel, String text)
 	{
+		log.debug(channel);
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
 		String line;
@@ -431,6 +442,20 @@ public class IRCTime extends BotAdapter
 		}
 		window.appendLineForNick(nick, line);
 //		window.appendLine(channel, line);
+	}
+
+	@Override
+	public void onCtcpReply(Prefix prefix, String target, CTCP ctcp)
+	{
+		log.debug(ctcp);
+		long when = prefix.getWhen();
+		String nick = prefix.getNick();
+		if (ctcp.getCommand().equals(CTCP.PING))
+		{
+			long time = Long.parseLong(ctcp.getParam());
+			String line = String.format("%s CTCP PING from %s: %s ms", getTimeString(when), nick, System.currentTimeMillis() - time);
+			window.appendLineForNick(nick, line);
+		}
 	}
 
 	@Override

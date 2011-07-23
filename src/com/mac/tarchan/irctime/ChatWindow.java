@@ -273,6 +273,18 @@ public class ChatWindow extends JFrame
 				selectTab((index + 1) % count);
 			}
 		};
+		AbstractAction pingAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "ラグ計測");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendCtcpPing();
+			}
+		};
 
 		JRadioButtonMenuItem awayItem1 = new JRadioButtonMenuItem("チャット可能");
 		awayItem1.setSelected(true);
@@ -332,9 +344,10 @@ public class ChatWindow extends JFrame
 		opMenu.add("追い出す...");
 
 		JMenu ctcpMenu = new JMenu("CTCP");
-		ctcpMenu.add("ラグ計測");
+		ctcpMenu.add(pingAction);
+//		ctcpMenu.add("ラグ計測");
 		ctcpMenu.add("マシン時計");
-		ctcpMenu.add("ソフトの種類");
+		ctcpMenu.add("アプリ情報");
 		ctcpMenu.add("ユーザ情報");
 		ctcpMenu.add("対応CTCP");
 
