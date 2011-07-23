@@ -192,7 +192,8 @@ public class ChatWindow extends JFrame
 		AbstractAction opAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "なるとを付ける");
+				this.putValue(NAME, "オペレータ権限を与える");
+//				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt O"));
 			}
 
 			@Override
@@ -204,7 +205,8 @@ public class ChatWindow extends JFrame
 		AbstractAction deopAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "なるとを外す");
+				this.putValue(NAME, "オペレータ権限を奪う");
+//				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("shift alt O"));
 			}
 
 			@Override
@@ -216,7 +218,8 @@ public class ChatWindow extends JFrame
 		AbstractAction voiceAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "発言権を付ける");
+				this.putValue(NAME, "発言権を与える");
+//				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt V"));
 			}
 
 			@Override
@@ -228,7 +231,8 @@ public class ChatWindow extends JFrame
 		AbstractAction devoiceAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "発言権を外す");
+				this.putValue(NAME, "発言権を奪う");
+//				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("shift alt V"));
 			}
 
 			@Override
@@ -240,7 +244,7 @@ public class ChatWindow extends JFrame
 		AbstractAction leftTabAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "前のチャット");
+				this.putValue(NAME, "前のタブを選択");
 				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt meta LEFT"));
 			}
 
@@ -256,7 +260,7 @@ public class ChatWindow extends JFrame
 		AbstractAction rightTabAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "次のチャット");
+				this.putValue(NAME, "次のタブを選択");
 				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt meta RIGHT"));
 			}
 
@@ -320,20 +324,36 @@ public class ChatWindow extends JFrame
 //		chatMenu.add("アクションを送信...");
 		chatMenu.add("チャンネル一覧");
 
+		JMenu opMenu = new JMenu("オペレータ操作");
+		opMenu.add(voiceAction);
+		opMenu.add(devoiceAction);
+		opMenu.addSeparator();
+		opMenu.add("BANリストに追加...");
+		opMenu.add("追い出す...");
+
+		JMenu ctcpMenu = new JMenu("CTCP");
+		ctcpMenu.add("ラグ計測");
+		ctcpMenu.add("マシン時計");
+		ctcpMenu.add("ソフトの種類");
+		ctcpMenu.add("ユーザ情報");
+		ctcpMenu.add("対応CTCP");
+
 		JMenu memberMenu = new JMenu("メンバー");
 		memberMenu.add("ダイレクトメッセージを送信...");
-		memberMenu.add("ファイルを送信...");
-		memberMenu.add("チャンネルへ招待...");
+		memberMenu.add("チャットへ招待...");
 		memberMenu.addSeparator();
 		memberMenu.add("メンバー情報を見る");
 		memberMenu.addSeparator();
 		memberMenu.add(opAction);
 		memberMenu.add(deopAction);
-		memberMenu.add(voiceAction);
-		memberMenu.add(devoiceAction);
+		memberMenu.add(opMenu);
+//		memberMenu.add(voiceAction);
+//		memberMenu.add(devoiceAction);
 		memberMenu.addSeparator();
-		memberMenu.add("BAN...");
-		memberMenu.add("キック...");
+//		memberMenu.add("BAN...");
+//		memberMenu.add("キック...");
+		memberMenu.add(ctcpMenu);
+		memberMenu.add("ファイルを送信...");
 
 		JMenu windowMenu = new JMenu("ウインドウ");
 		windowMenu.add("しまう");
