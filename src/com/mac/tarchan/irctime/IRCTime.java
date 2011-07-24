@@ -298,7 +298,47 @@ public class IRCTime extends BotAdapter
 		ChannelMember[] list = tab.getSelectedMembers();
 		for (ChannelMember item : list)
 		{
-			irc.ctcp(item.getNick(), "PING " + System.currentTimeMillis());
+			irc.ctcp(item.getNick(), CTCP.PING + " " + System.currentTimeMillis());
+		}
+	}
+
+	public void sendCtcpTime()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			irc.ctcp(item.getNick(), CTCP.TIME);
+		}
+	}
+
+	public void sendCtcpVersion()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			irc.ctcp(item.getNick(), CTCP.VERSION);
+		}
+	}
+
+	public void sendCtcpUserInfo()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			irc.ctcp(item.getNick(), CTCP.USERINFO);
+		}
+	}
+
+	public void sendCtcpClientInfo()
+	{
+		ChatPanel tab = window.currentTab();
+		ChannelMember[] list = tab.getSelectedMembers();
+		for (ChannelMember item : list)
+		{
+			irc.ctcp(item.getNick(), CTCP.CLIENTINFO);
 		}
 	}
 
@@ -311,11 +351,12 @@ public class IRCTime extends BotAdapter
 		int count = tab.getNickCount();
 		if (count == 0)
 		{
-			window.setTitle("IRCTime");
+			String title = String.format("%s - IRCTime", channel);
+			window.setTitle(title);
 		}
 		else if (topic == null)
 		{
-			String title = String.format("%s (%s,%s) - IRCTime", channel, "", count);
+			String title = String.format("%s (%s) - IRCTime", channel, count);
 			window.setTitle(title);
 		}
 		else
@@ -454,6 +495,11 @@ public class IRCTime extends BotAdapter
 		{
 			long time = Long.parseLong(ctcp.getParam());
 			String line = String.format("%s CTCP PING from %s: %s ms", getTimeString(when), nick, System.currentTimeMillis() - time);
+			window.appendLineForNick(nick, line);
+		}
+		else
+		{
+			String line = String.format("%s CTCP %s from %s: %s", getTimeString(when), ctcp.getCommand(), nick, ctcp.getParam());
 			window.appendLineForNick(nick, line);
 		}
 	}

@@ -285,6 +285,54 @@ public class ChatWindow extends JFrame
 				app.sendCtcpPing();
 			}
 		};
+		AbstractAction timeAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "マシン時計");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendCtcpTime();
+			}
+		};
+		AbstractAction versionAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "アプリ情報");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendCtcpVersion();
+			}
+		};
+		AbstractAction userInfoAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "ユーザ情報");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendCtcpUserInfo();
+			}
+		};
+		AbstractAction clientInfoAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "対応CTCP");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				app.sendCtcpClientInfo();
+			}
+		};
 
 		JRadioButtonMenuItem awayItem1 = new JRadioButtonMenuItem("チャット可能");
 		awayItem1.setSelected(true);
@@ -345,11 +393,15 @@ public class ChatWindow extends JFrame
 
 		JMenu ctcpMenu = new JMenu("CTCP");
 		ctcpMenu.add(pingAction);
+		ctcpMenu.add(timeAction);
+		ctcpMenu.add(versionAction);
+		ctcpMenu.add(userInfoAction);
+		ctcpMenu.add(clientInfoAction);
 //		ctcpMenu.add("ラグ計測");
-		ctcpMenu.add("マシン時計");
-		ctcpMenu.add("アプリ情報");
-		ctcpMenu.add("ユーザ情報");
-		ctcpMenu.add("対応CTCP");
+//		ctcpMenu.add("マシン時計");
+//		ctcpMenu.add("アプリ情報");
+//		ctcpMenu.add("ユーザ情報");
+//		ctcpMenu.add("対応CTCP");
 
 		JMenu memberMenu = new JMenu("メンバー");
 		memberMenu.add("ダイレクトメッセージを送信...");
