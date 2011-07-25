@@ -50,6 +50,8 @@ public class ChatWindow extends JFrame
 
 	private TopicBox topicBox;
 
+	private ActionBox actionBox;
+
 	private IRCTime app;
 
 	public ChatWindow(String tile)
@@ -69,6 +71,7 @@ public class ChatWindow extends JFrame
 		joinBox = new JoinBox(owner);
 		partBox = new PartBox(owner);
 		topicBox = new TopicBox(owner);
+		actionBox = new ActionBox(owner);
 	}
 
 	private JMenuBar createMenuBar()
@@ -140,6 +143,18 @@ public class ChatWindow extends JFrame
 				topicBox.setVisible(true);
 			}
 		};
+		AbstractAction actionAction = new AbstractAction()
+		{
+			{
+				this.putValue(NAME, "アクションを送信...");
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent evt)
+			{
+				actionBox.setVisible(true);
+			}
+		};
 		AbstractAction joinAction = new AbstractAction()
 		{
 			{
@@ -192,7 +207,7 @@ public class ChatWindow extends JFrame
 		AbstractAction opAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "オペレータ権限を与える");
+				this.putValue(NAME, "+o オペレータ権限を与える");
 //				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt O"));
 			}
 
@@ -205,7 +220,7 @@ public class ChatWindow extends JFrame
 		AbstractAction deopAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "オペレータ権限を奪う");
+				this.putValue(NAME, "-o オペレータ権限を奪う");
 //				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("shift alt O"));
 			}
 
@@ -218,7 +233,7 @@ public class ChatWindow extends JFrame
 		AbstractAction voiceAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "発言権を与える");
+				this.putValue(NAME, "+v 発言権を与える");
 //				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("alt V"));
 			}
 
@@ -231,7 +246,7 @@ public class ChatWindow extends JFrame
 		AbstractAction devoiceAction = new AbstractAction()
 		{
 			{
-				this.putValue(NAME, "発言権を奪う");
+				this.putValue(NAME, "-v 発言権を奪う");
 //				this.putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("shift alt V"));
 			}
 
@@ -377,6 +392,7 @@ public class ChatWindow extends JFrame
 		chatMenu.add(infoAction);
 		chatMenu.add(modeAction);
 		chatMenu.add(topicAction);
+		chatMenu.add(actionAction);
 		chatMenu.addSeparator();
 //		chatMenu.add("メッセージを送信...");
 //		chatMenu.add("コマンドを送信...");
@@ -451,6 +467,7 @@ public class ChatWindow extends JFrame
 		EventQuery.from(partBox).input().click(app, "sendPart", "");
 		EventQuery.from(awayMenu).button().click(app, "sendAway", "");
 		EventQuery.from(tabPanel).change(app, "onTabChange", "source.selectedComponent");
+		EventQuery.from(actionBox).input().click(app, "sendCtcpAction", "");
 	}
 
 	public ChatPanel getTab(String name)

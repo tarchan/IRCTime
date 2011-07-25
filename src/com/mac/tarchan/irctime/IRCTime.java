@@ -225,7 +225,7 @@ public class IRCTime extends BotAdapter
 		ChatPanel tab = window.currentTab();
 		String channel = tab.getName();
 		String text = evt.getActionCommand();
-		if (channel.startsWith("#"))
+		if (isChannel(channel))
 		{
 			irc.part(channel, text);
 		}
@@ -340,6 +340,18 @@ public class IRCTime extends BotAdapter
 		{
 			irc.ctcp(item.getNick(), CTCP.CLIENTINFO);
 		}
+	}
+
+	public void sendCtcpAction(ActionEvent evt)
+	{
+		ChatPanel tab = window.currentTab();
+		String channel = tab.getName();
+		String text = evt.getActionCommand();
+		if (isChannel(channel))
+		{
+			irc.ctcp(channel, CTCP.ACTION + " " + text);
+		}
+		hideDialog(evt.getSource());
 	}
 
 	public void onTabChange(ChatPanel tab)
@@ -486,6 +498,15 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
+	public void onDirectMessage(Prefix prefix, String target, String text)
+	{
+		long when = prefix.getWhen();
+		String nick = prefix.getNick();
+		String line = String.format("%s %s: %s", getTimeString(when), nick, text);
+		window.appendLine(nick, line);
+	}
+
+	@Override
 	public void onCtcpReply(Prefix prefix, String target, CTCP ctcp)
 	{
 		log.debug(ctcp);
@@ -505,12 +526,12 @@ public class IRCTime extends BotAdapter
 	}
 
 	@Override
-	public void onDirectMessage(Prefix prefix, String target, String text)
+	public void onCtcpAction(Prefix prefix, String target, CTCP ctcp)
 	{
 		long when = prefix.getWhen();
 		String nick = prefix.getNick();
-		String line = String.format("%s %s: %s", getTimeString(when), nick, text);
-		window.appendLine(nick, line);
+		String line = String.format("%s %s %s", getTimeString(when), nick, ctcp.getParam());
+		window.appendLine(target, line);
 	}
 
 	@Override
