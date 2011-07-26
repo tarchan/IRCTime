@@ -356,7 +356,7 @@ public class IRCTime extends BotAdapter
 
 	public void onTabChange(ChatPanel tab)
 	{
-//		log.info(tab);
+		log.debug(tab);
 		tab.goInput();
 		String channel = tab.getName();
 		String topic = tab.getTopic();

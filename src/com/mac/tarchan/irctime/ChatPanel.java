@@ -5,6 +5,7 @@ package com.mac.tarchan.irctime;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.HierarchyEvent;
 import java.util.Arrays;
 
 import javax.swing.Box;
@@ -48,10 +49,15 @@ public class ChatPanel extends JPanel
 	public ChatPanel()
 	{
 		createMain(this);
-
 		EventQuery.from(this)
 			.button().click(this).end()
 			.input().click(this).end();
+		EventQuery.from(inputText).ready(this, "onLoad", "");
+	}
+
+	public void onLoad(HierarchyEvent evt)
+	{
+		log.debug("ロードしました。: " + evt);
 	}
 
 	private Component createMain(JPanel main)

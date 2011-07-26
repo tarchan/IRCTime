@@ -468,6 +468,14 @@ public class ChatWindow extends JFrame
 		EventQuery.from(awayMenu).button().click(app, "sendAway", "");
 		EventQuery.from(tabPanel).change(app, "onTabChange", "source.selectedComponent");
 		EventQuery.from(actionBox).input().click(app, "sendCtcpAction", "");
+		EventQuery.from(this).ready(this, "onLoad", null);
+	}
+
+	public void onLoad()
+	{
+		log.debug("タブ数: " + getTabCount());
+		ChatPanel tab = currentTab();
+		tab.goInput();
 	}
 
 	public ChatPanel getTab(String name)
@@ -479,9 +487,7 @@ public class ChatWindow extends JFrame
 			tab.setName(name);
 //			tab.setTopic(name);
 			tabPanel.addTab(name, tab);
-
 			EventQuery.from(tab).find("inputText").click(app, "sendText", "");
-
 			return tab;
 		}
 		else
